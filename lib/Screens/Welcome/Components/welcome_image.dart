@@ -18,7 +18,7 @@ class Welcome_Image extends StatelessWidget {
             Expanded(
               flex: 8,
               child: Image.asset(
-                'asset/img/intro_under.png',
+                'assets/Img/intro_under.png',
               ),
             ),
             const Spacer(),

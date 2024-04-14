@@ -1,3 +1,4 @@
+import 'package:caki_project/Screens/Preference/preference_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../Welcome/welcome_screen.dart';
@@ -14,8 +15,8 @@ class LoginForm extends StatelessWidget {
       child: Column(
         children: [
           TextFormField(
+            keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
-            obscureText: true,
             cursorColor: const Color(0xFF8A9352),
             decoration: const InputDecoration(
               hintText: 'E-mail',
@@ -65,7 +66,7 @@ class LoginForm extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                              const Welcome_Screen()),
+                                  pre_choice()),
                               (route) => false);
                     }
                   },

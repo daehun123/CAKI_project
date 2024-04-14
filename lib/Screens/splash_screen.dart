@@ -10,7 +10,7 @@ class Spalsh_Screen extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Image.asset('asset/img/intro_under.png'),
+          Image.asset('assets/Img/intro_under.png'),
           const CircularProgressIndicator(
             color: Colors.white,
           )
