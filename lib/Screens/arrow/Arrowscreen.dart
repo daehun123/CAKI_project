@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../main.dart';
 import '../Main_veiw/Bottom_main.dart';
+import '../Main_veiw/main_screen.dart';
 
 class ArrowScreen extends StatelessWidget {
   const ArrowScreen({super.key});
@@ -16,7 +16,7 @@ class ArrowScreen extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MyApp()), // 설정 페이지로 이동
+              MaterialPageRoute(builder: (context) => MyHomePage()), // 설정 페이지로 이동
             );
           },
         ),

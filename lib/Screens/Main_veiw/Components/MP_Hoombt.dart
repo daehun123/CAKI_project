@@ -1,6 +1,6 @@
+import 'package:caki_project/Screens/Main_veiw/main_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../main.dart';
 
 class MainpageHoombt extends StatelessWidget {
   const MainpageHoombt({super.key});
@@ -20,7 +20,7 @@ class MainpageHoombt extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyApp()), // 두 번째 화면으로 이동
+          MaterialPageRoute(builder: (context) => MyHomePage()), // 두 번째 화면으로 이동
         );// 아이콘 클릭 시 수행할 동작
       },
     );
