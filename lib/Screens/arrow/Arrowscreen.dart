@@ -10,7 +10,7 @@ class ArrowScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('업로드'),
+        title: Text('업 로 드'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back), // 아이콘 설정
           onPressed: () {
