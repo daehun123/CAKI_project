@@ -20,6 +20,7 @@ class ArrowScreen extends StatelessWidget {
             );
           },
         ),
+        backgroundColor: Color(0xFF8A9352), // 엡바 색상 설정
       ),
       body: Center(
         child: Text('이것은 두 번째 화면입니다.'),

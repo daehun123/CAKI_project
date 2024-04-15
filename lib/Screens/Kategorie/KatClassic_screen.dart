@@ -11,6 +11,7 @@ class ClassicScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text('Classic'),
+          backgroundColor: Color(0xFF8A9352),
         ),
         bottomNavigationBar: Bottom()
     );

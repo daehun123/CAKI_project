@@ -6,6 +6,7 @@ import 'Components/Mainpagesearchbox.dart';
 @override
 PreferredSizeWidget Apptop(BuildContext context) {
   return AppBar(
+    automaticallyImplyLeading: false,
     backgroundColor: Color(0xFF8A9352),
     title: Align(
       alignment: Alignment.centerLeft,

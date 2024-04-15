@@ -11,6 +11,7 @@ class ExpertScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text('Expert'),
+          backgroundColor: Color(0xFF8A9352),
         ),
         bottomNavigationBar: Bottom()
     );
