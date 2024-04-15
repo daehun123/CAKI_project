@@ -11,6 +11,7 @@ class SimpleScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text('Simple'),
+          backgroundColor: Color(0xFF8A9352),
         ),
         bottomNavigationBar: Bottom()
     );

@@ -10,7 +10,7 @@ class ArrowScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('업로드'),
+        title: Text('업 로 드'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back), // 아이콘 설정
           onPressed: () {
@@ -20,6 +20,7 @@ class ArrowScreen extends StatelessWidget {
             );
           },
         ),
+        backgroundColor: Color(0xFF8A9352), // 엡바 색상 설정
       ),
       body: Center(
         child: Text('이것은 두 번째 화면입니다.'),

@@ -1,8 +1,6 @@
-import 'package:caki_project/Screens/Main_veiw/main_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Main_veiw/Bottom_main.dart';
-import '../Main_veiw/Components/Mainpagesearchbox.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -10,21 +8,26 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(120.0), // AppBar의 높이 설정
-        child: AppBar(
-          backgroundColor: Color(0xFF8A9352),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back), // 아이콘 설정
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MyHomePage()), // 설정 페이지로 이동
-              );
-            },
-          ),
-          bottom: searchBox(context),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Color(0xFF8A9352),
+        title: Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                // 검색 아이콘 클릭 시 동작할 내용
+              },
+            ),
+            Text(
+              '검색',
+              style: TextStyle(fontSize: 20),
+            ),
+          ],
         ),
+      ),
+      body: Center(
+        child: Text('여기에 검색 내용이 표시됩니다.'),
       ),
       bottomNavigationBar: Bottom(),
     );
