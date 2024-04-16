@@ -63,7 +63,7 @@ class pre_choice extends StatelessWidget {
                           ),
                           borderRadius: BorderRadius.circular(10),
                           spacing: 5,
-                          buttonWidth: MediaQuery.of(context).size.width / 2.2,
+                          buttonWidth: MediaQuery.of(context).size.width / 2.4,
                         ),
                         isRadio: false,
                         controller: GroupButtonController(
