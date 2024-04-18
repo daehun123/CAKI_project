@@ -1,25 +1,40 @@
+import 'package:caki_project/Screens/search/Search_Resultscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SearchForm extends StatelessWidget {
-  final Search_formkey = GlobalKey<FormState>();
+  final searchFormKey = GlobalKey<FormState>();
 
   SearchForm({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: Search_formkey,
+      key: searchFormKey,
       child: Padding(
         padding: const EdgeInsets.all(0.0),
         child: TextFormField(
+          textInputAction: TextInputAction.next,
           autofocus: true, // 자동으로 키보드를 띄움
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return '검색어를 입력하세요';
+            }
+            return null;
+          },
           decoration: InputDecoration(
             hintText: '  검색어를 입력하세요',
             suffixIcon: IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
-                // 검색 버튼 클릭 시 동작할 내용
+                // 폼 검증
+                if (searchFormKey.currentState!.validate()) {
+                  // 검증 성공 시 ResultScreen으로 이동
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ResultScreen()),
+                  );
+                }
               },
             ),
             border: OutlineInputBorder(
