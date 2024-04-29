@@ -1,3 +1,4 @@
+import 'package:caki_project/Components/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ class CheaperScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text('Cheaper'),
-          backgroundColor: Color(0xFF8A9352),
+          backgroundColor: kColor,
         ),
         bottomNavigationBar: Bottom()
     );
