@@ -18,7 +18,7 @@ class SearchForm extends StatelessWidget {
           autofocus: true, // 자동으로 키보드를 띄움
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return '검색어를 입력하세요';
+              return;
             }
             return null;
           },

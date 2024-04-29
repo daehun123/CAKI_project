@@ -38,12 +38,12 @@ class _Recent_SearchState extends State<Recent_Search> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            "최근 검색",
+            "   최근 검색",
             style: TextStyle(
               fontSize: 15,
             ),
           ),
-        ),
+        ),/*
         Expanded(
           child: ListView.builder(
             itemCount: recentSearches.length,
@@ -57,7 +57,7 @@ class _Recent_SearchState extends State<Recent_Search> {
               );
             },
           ),
-        ),
+        ),*/
       ],
     );
   }
