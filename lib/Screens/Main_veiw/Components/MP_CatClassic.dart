@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../Categorie/CatClassic_screen.dart';
+import '../../Categorie/KatClassic_screen.dart';
 
 class CatClassic extends StatelessWidget {
   final double width;
