@@ -24,7 +24,7 @@ class WeeklyTrand extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10.0),
                 border: Border.all(
                   color: Colors.black,
-                  width: 2.0,
+                  width: 1.0,
                 ),
               ),
               padding: EdgeInsets.all(20.0),

@@ -47,7 +47,10 @@ class _FilterScreenState extends State<FilterScreen> {
     '우유/크림',
   ];
 
-  List<String> choiceList = []; // 사용자의 선택을 저장하는 리스트
+  List<String> choiceExpert = []; // 사용자의 선택을 저장하는 리스트
+  List<String> choicealcohol = [];
+  List<String> choicetaste = [];
+  List<String> choiceother = [];
   int selectCount = 0;
 
   @override
@@ -107,10 +110,10 @@ class _FilterScreenState extends State<FilterScreen> {
                           // 선택 상태 변경 시 동작
                           setState(() {
                             if (selected) {
-                              choiceList.add(val);
+                              choiceExpert.add(val);
                               selectCount++;
                             } else {
-                              choiceList.remove(val);
+                              choiceExpert.remove(val);
                               selectCount--;
                             }
                           });
@@ -147,10 +150,10 @@ class _FilterScreenState extends State<FilterScreen> {
                           // 선택 상태 변경 시 동작
                           setState(() {
                             if (selected) {
-                              choiceList.add(val);
+                              choicealcohol.add(val);
                               selectCount++;
                             } else {
-                              choiceList.remove(val);
+                              choicealcohol.remove(val);
                               selectCount--;
                             }
                           });
@@ -187,10 +190,10 @@ class _FilterScreenState extends State<FilterScreen> {
                           // 선택 상태 변경 시 동작
                           setState(() {
                             if (selected) {
-                              choiceList.add(val);
+                              choicetaste.add(val);
                               selectCount++;
                             } else {
-                              choiceList.remove(val);
+                              choicetaste.remove(val);
                               selectCount--;
                             }
                           });
@@ -227,10 +230,10 @@ class _FilterScreenState extends State<FilterScreen> {
                           // 선택 상태 변경 시 동작
                           setState(() {
                             if (selected) {
-                              choiceList.add(val);
+                              choiceother.add(val);
                               selectCount++;
                             } else {
-                              choiceList.remove(val);
+                              choiceother.remove(val);
                               selectCount--;
                             }
                           });
@@ -256,7 +259,7 @@ class _FilterScreenState extends State<FilterScreen> {
               minimumSize: const Size(200, 56),
             ),
             onPressed: () {
-              debugPrint('$choiceList');
+              debugPrint('$choiceExpert, $choicealcohol, $choicetaste, $choiceother');
               Navigator.push(
                 context,
                 MaterialPageRoute(

@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Bottom_main.dart';
-import 'Components/MP_KatCheaper.dart';
-import 'Components/MP_KatClassic.dart';
-import 'Components/MP_KatExpert.dart';
-import 'Components/MP_KatSimple.dart';
+import 'Components/MP_CatCheaper.dart';
+import 'Components/MP_CatClassic.dart';
+import 'Components/MP_CatExpert.dart';
+import 'Components/MP_CatSimple.dart';
 import 'Components/MP_WeeklyTrand.dart';
 import 'Top_main.dart';
 
@@ -33,10 +33,10 @@ class MyHomePage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  KatClassic(width: katWidth),
-                  KatExpert(width: katWidth),
-                  KatSimple(width: katWidth),
-                  KatCheaper(width: katWidth),
+                  CatClassic(width: katWidth),
+                  CatExpert(width: katWidth),
+                  CatSimple(width: katWidth),
+                  CatCheaper(width: katWidth),
                 ],
               ),
             ),
