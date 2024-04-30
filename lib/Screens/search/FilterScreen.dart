@@ -12,7 +12,16 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-  late GroupButtonController _controller; // GroupButtonController 선언
+  late GroupButtonController _alcoholController;
+  late GroupButtonController _tasteController;
+  late GroupButtonController _otherController;
+  late GroupButtonController _expertController;
+
+  List<String> expertGroup = [
+    '인증 ◯',
+    '인증 ☓'
+  ];
+
   List<String> alcoholGroup = [
     '보드카',
     '럼',
@@ -25,10 +34,10 @@ class _FilterScreenState extends State<FilterScreen> {
 
   List<String> tasteGroup = [
     '도수★★★',
-    '도수★★',
-    '도수★',
     '당도★★★',
+    '도수★★',
     '당도★★',
+    '도수★',
     '당도★',
   ];
 
@@ -44,7 +53,10 @@ class _FilterScreenState extends State<FilterScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = GroupButtonController(selectedIndexes: []);
+    _alcoholController = GroupButtonController(selectedIndexes: []);
+    _tasteController = GroupButtonController(selectedIndexes: []);
+    _otherController = GroupButtonController(selectedIndexes: []);
+    _expertController = GroupButtonController(selectedIndexes: []);
   }
 
   @override
@@ -66,11 +78,50 @@ class _FilterScreenState extends State<FilterScreen> {
                     children: [
                       SizedBox(height: 15),
                       Text(
-                        '술 그룹', // 술 그룹 텍스트 추가
+                        '인증 유무',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      // 술 그룹 버튼
+                      GroupButton(
+                        buttons: expertGroup,
+                        options: GroupButtonOptions(
+                          selectedShadow: const [],
+                          unselectedShadow: const [],
+                          selectedTextStyle: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                          selectedColor: kColor,
+                          unselectedColor: Colors.grey,
+                          unselectedTextStyle: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                          spacing: 5,
+                          buttonWidth: MediaQuery.of(context).size.width / 2.4,
+                        ),
+                        isRadio: false,
+                        controller: _expertController, // 술 종류 그룹에 대한 Controller
+                        onSelected: (val, i, selected) {
+                          // 선택 상태 변경 시 동작
+                          setState(() {
+                            if (selected) {
+                              choiceList.add(val);
+                              selectCount++;
+                            } else {
+                              choiceList.remove(val);
+                              selectCount--;
+                            }
+                          });
+                        },
+                      ),
+                      SizedBox(height: 15),
+                      Text(
+                        '술 종류',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
                       GroupButton(
                         buttons: alcoholGroup,
                         options: GroupButtonOptions(
@@ -91,29 +142,26 @@ class _FilterScreenState extends State<FilterScreen> {
                           buttonWidth: MediaQuery.of(context).size.width / 2.4,
                         ),
                         isRadio: false,
-                        controller: _controller,
+                        controller: _alcoholController, // 술 종류 그룹에 대한 Controller
                         onSelected: (val, i, selected) {
+                          // 선택 상태 변경 시 동작
                           setState(() {
                             if (selected) {
-                              choiceList.add(val); // 선택된 버튼을 리스트에 추가
-                              selectCount++; // 선택된 취향 개수 증가
+                              choiceList.add(val);
+                              selectCount++;
                             } else {
                               choiceList.remove(val);
-                              // 선택 취소된 버튼을 리스트에서 제거
-                              debugPrint('$choiceList');
-                              // 선택된 취향 리스트를 디버그 로그로 출력
-                              selectCount--; // 선택된 취향 개수 감소
+                              selectCount--;
                             }
                           });
                         },
                       ),
                       SizedBox(height: 15),
                       Text(
-                        '당도 그룹', // 당도 그룹 텍스트 추가
+                        '도수 & 당도',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      // 당도 그룹 버튼
                       GroupButton(
                         buttons: tasteGroup,
                         options: GroupButtonOptions(
@@ -134,29 +182,26 @@ class _FilterScreenState extends State<FilterScreen> {
                           buttonWidth: MediaQuery.of(context).size.width / 2.4,
                         ),
                         isRadio: false,
-                        controller: _controller,
+                        controller: _tasteController, // 도수 & 당도 그룹에 대한 Controller
                         onSelected: (val, i, selected) {
+                          // 선택 상태 변경 시 동작
                           setState(() {
                             if (selected) {
-                              choiceList.add(val); // 선택된 버튼을 리스트에 추가
-                              selectCount++; // 선택된 취향 개수 증가
+                              choiceList.add(val);
+                              selectCount++;
                             } else {
                               choiceList.remove(val);
-                              // 선택 취소된 버튼을 리스트에서 제거
-                              debugPrint('$choiceList');
-                              // 선택된 취향 리스트를 디버그 로그로 출력
-                              selectCount--; // 선택된 취향 개수 감소
+                              selectCount--;
                             }
                           });
                         },
                       ),
                       SizedBox(height: 15),
                       Text(
-                        '기타음료 그룹', // 기타음료 그룹 텍스트 추가
+                        '기타음료',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      // 기타음료 그룹 버튼
                       GroupButton(
                         buttons: otherGroup,
                         options: GroupButtonOptions(
@@ -177,18 +222,16 @@ class _FilterScreenState extends State<FilterScreen> {
                           buttonWidth: MediaQuery.of(context).size.width / 2.4,
                         ),
                         isRadio: false,
-                        controller: _controller,
+                        controller: _otherController, // 기타음료 그룹에 대한 Controller
                         onSelected: (val, i, selected) {
+                          // 선택 상태 변경 시 동작
                           setState(() {
                             if (selected) {
-                              choiceList.add(val); // 선택된 버튼을 리스트에 추가
-                              selectCount++; // 선택된 취향 개수 증가
+                              choiceList.add(val);
+                              selectCount++;
                             } else {
                               choiceList.remove(val);
-                              // 선택 취소된 버튼을 리스트에서 제거
-                              debugPrint('$choiceList');
-                              // 선택된 취향 리스트를 디버그 로그로 출력
-                              selectCount--; // 선택된 취향 개수 감소
+                              selectCount--;
                             }
                           });
                         },
@@ -213,19 +256,19 @@ class _FilterScreenState extends State<FilterScreen> {
               minimumSize: const Size(200, 56),
             ),
             onPressed: () {
-              debugPrint('$choiceList'); // 선택된 취향 리스트를 디버그 로그로 출력
+              debugPrint('$choiceList');
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) {
-                    return const ResultScreen(); // 검색결과 페이지로 이동
+                    return const ResultScreen();
                   },
                 ),
               );
             },
             child: Text(
               '키워드 $selectCount개에 대한 검색'.toUpperCase(),
-              style: TextStyle(fontSize: 15.0, color: Colors.black,), // 흰색 텍스트// 검색 버튼 텍스트
+              style: TextStyle(fontSize: 15.0, color: Colors.black),
             ),
           ),
         ),
