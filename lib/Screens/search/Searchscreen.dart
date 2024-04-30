@@ -1,3 +1,5 @@
+import 'package:caki_project/Screens/search/Components/recent_search.dart';
+import 'package:caki_project/Screens/search/Components/search_filterBT.dart';
 import 'package:caki_project/Screens/search/Components/search_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,29 +19,29 @@ class SearchScreen extends StatelessWidget {
         child: AppBar(
           backgroundColor: Color(0xFF8A9352),
           automaticallyImplyLeading: false,
-          title:
-            Container(
-              alignment: Alignment.centerLeft,
-              width: WTWidth,
-              child: SearchForm(),
-            ), // 검색 입력 폼을 AppBar의 액션으로 추가
+          title: Container(
+            alignment: Alignment.centerLeft,
+            width: WTWidth,
+            child: SearchForm(),
+          ), // 검색 입력 폼을 AppBar의 액션으로 추가
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              "--- 최근 검색 ---",
-              style: TextStyle(
-                fontSize: 15,
-              ),
-            ),
+          Expanded(
+            child: Recent_Search(),
           ),
           Expanded(
-            child: Container(
-              // 여기에 최근 검색 결과를 표시할 위젯을 추가하세요
+            child: Stack(
+              alignment: Alignment.topRight,
+              children: [
+                Positioned(
+                  right: 10,
+                  top: 10,
+                  child: SearchFilterBT(),
+                ),
+              ],
             ),
           ),
         ],

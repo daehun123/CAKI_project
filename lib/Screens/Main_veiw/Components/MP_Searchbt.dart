@@ -21,7 +21,7 @@ class MainpageSearchbt extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => SearchScreen(key: null,)), // 두 번째 화면으로 이동
+              builder: (context) => SearchScreen()), // 두 번째 화면으로 이동
         ); // 아이콘 클릭 시 수행할 동작
       },
     );
