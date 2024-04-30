@@ -1,3 +1,4 @@
+import 'package:caki_project/Components/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +8,7 @@ import 'Components/Mainpagesearchbox.dart';
 PreferredSizeWidget Apptop(BuildContext context) {
   return AppBar(
     automaticallyImplyLeading: false,
-    backgroundColor: Color(0xFF8A9352),
+    backgroundColor: kColor,
     title: Align(
       alignment: Alignment.centerLeft,
       child: Text(

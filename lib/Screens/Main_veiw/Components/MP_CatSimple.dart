@@ -24,7 +24,7 @@ class CatSimple extends StatelessWidget {
           borderRadius: BorderRadius.circular(5),
           border: Border.all(
             color: Colors.black, // 검은색 테두리
-            width: 2.0, // 테두리 두께
+            width: 1.0, // 테두리 두께
           ),
         ),
       ),
