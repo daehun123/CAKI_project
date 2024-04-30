@@ -26,7 +26,7 @@ class SearchScreen extends StatelessWidget {
           ), // 검색 입력 폼을 AppBar의 액션으로 추가
         ),
       ),
-      body: Row(
+      body: const Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
