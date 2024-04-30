@@ -16,7 +16,7 @@ class SearchFilterBT extends StatelessWidget {
         );
       },
       child: Container( // 둥근 상자
-        width: 80,  // 상자 너비
+        width: 60,  // 상자 너비
         height: 40,  // 상자 높이
         decoration: BoxDecoration(
           color: Colors.white, // 흰색 바탕
@@ -32,7 +32,7 @@ class SearchFilterBT extends StatelessWidget {
           '필터',
           textAlign: TextAlign.center, // 텍스트 중앙 정렬
           style: TextStyle(
-              fontSize: 20.0,
+              fontSize: 15.0,
               color: Colors.black,
               //fontWeight: FontWeight.bold
           ), // 흰색 텍스트
