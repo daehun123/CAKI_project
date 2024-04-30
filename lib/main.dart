@@ -1,3 +1,4 @@
+import 'package:caki_project/Components/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,13 +19,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter',
       theme: ThemeData(
-          primaryColor: const Color(0xFF8A9352),
+          primaryColor: kColor,
           scaffoldBackgroundColor: Colors.white,
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
               elevation: 0,
               foregroundColor: Colors.white,
-              backgroundColor: const Color(0xFF8A9352),
+              backgroundColor: kColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
