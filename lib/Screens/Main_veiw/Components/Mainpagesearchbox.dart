@@ -22,7 +22,7 @@ PreferredSizeWidget searchBox(BuildContext context) {
               backgroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
-                side: BorderSide(color: Colors.black, width: 2.0),
+                side: BorderSide(color: Colors.black, width: 1.0),
               ),
               padding: EdgeInsets.zero,
             ),

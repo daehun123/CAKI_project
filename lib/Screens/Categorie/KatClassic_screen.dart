@@ -9,7 +9,7 @@ class ClassicScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: Text('Classic'),
           backgroundColor: Color(0xFF8A9352),
