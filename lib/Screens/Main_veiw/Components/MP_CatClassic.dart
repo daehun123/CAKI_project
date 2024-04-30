@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../Kategorie/KatClassic_screen.dart';
+import '../../Categorie/CatClassic_screen.dart';
 
-class KatClassic extends StatelessWidget {
+class CatClassic extends StatelessWidget {
   final double width;
-  const KatClassic({super.key, required this.width});
+  const CatClassic({super.key, required this.width});
 
   @override
   Widget build(BuildContext context) {

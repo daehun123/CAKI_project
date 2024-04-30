@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../Kategorie/KatExpert_screen.dart';
+import '../../Categorie/CatCheaper_screen.dart';
 
-class KatExpert extends StatelessWidget {
+class CatCheaper extends StatelessWidget{
   final double width;
-  const KatExpert({super.key, required this.width});
+  const CatCheaper({super.key, required this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class KatExpert extends StatelessWidget {
         // 눌렀을 때 해당 페이지로 이동하도록 함
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ExpertScreen()),
+          MaterialPageRoute(builder: (context) => CheaperScreen()),
         );
       },
       child: Container(
