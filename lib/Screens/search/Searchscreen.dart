@@ -38,7 +38,7 @@ class SearchScreen extends StatelessWidget {
               children: [
                 Positioned(
                   right: 10,
-                  top: 10,
+                  top: 10.0,
                   child: SearchFilterBT(),
                 ),
               ],
