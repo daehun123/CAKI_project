@@ -1,28 +1,22 @@
+import 'package:caki_project/Components/constants.dart';
+import 'package:caki_project/Screens/Categorie/components/board_list_classic.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../Main_veiw/Bottom_main.dart';
 
 class ClassicScreen extends StatelessWidget {
-  const ClassicScreen({super.key});
+  ClassicScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
-          title: Text('Classic'),
-          backgroundColor: Color(0xFF8A9352),
+          title: const Text('Classic'),
+          backgroundColor: kColor,
         ),
-        body: SizedBox(
-          width: double.infinity,
-          height: MediaQuery
-              .of(context)
-              .size
-              .height,
-          child: Text('new'),
-        ),
-        bottomNavigationBar: Bottom()
-    );
+        body: BoardList(),
+        bottomNavigationBar: Bottom());
   }
 }
