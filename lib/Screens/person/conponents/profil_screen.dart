@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../Main_veiw/main_screen.dart';
+
 class Profil_body extends StatefulWidget {
   const Profil_body({super.key});
 
@@ -31,7 +33,8 @@ class _Profil_bodyState extends State<Profil_body> {
     _profil_data = {
       "name": "대훈",
       "bio": "소프트웨어학과 파이팅",
-      "imageUrl": "https://via.placeholder.com/150"
+      "imageUrl": "https://via.placeholder.com/150",
+      "posts": Null
     };
   }
 
@@ -88,6 +91,24 @@ class _Profil_bodyState extends State<Profil_body> {
             height: 1.0,
             width: double.infinity,
             color: kColor,
+          ),
+          InkWell(
+            child: GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, mainAxisSpacing: 1, crossAxisSpacing: 1),
+              itemCount: 50,
+              itemBuilder: (context, index) => Container(
+                color: Colors.grey,
+              ),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyHomePage()), // 설정 페이지로 이동
+              );
+            },
           )
         ],
       ),
