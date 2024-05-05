@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'Bottom_main.dart';
 import 'Components/MP_CatCheaper.dart';
 import 'Components/MP_CatClassic.dart';
@@ -26,7 +27,7 @@ class MyHomePage extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          WeeklyTrand(width: WTWidth),
+          Expanded(child:WeeklyTrand(),),
           Expanded(
             child: Container(
               alignment: Alignment.center,
