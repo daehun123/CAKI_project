@@ -12,25 +12,42 @@ class BoardList extends StatefulWidget {
 
 class _BoardListState extends State<BoardList> {
   List<dynamic> _board_data = [];
-  
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _fetchBoard();
   }
-  
-  _fetchBoard() async{
-    final response = await http.get(Uri.parse('uri'));
-    if(response.statusCode == 200){
-      _board_data = json.decode(response.body);
-    }else{
-      throw Exception('Fail');
-    }
+
+  _fetchBoard() async {
+    // final response = await http.get(Uri.parse('uri'));
+    // if (response.statusCode == 200) {
+    //   _board_data = json.decode(response.body);
+    // } else {
+    //   throw Exception('Fail');
+    // }
+    _board_data = [
+      {
+        "title": "첫 번째 게시물",
+        "url": "https://via.placeholder.com/100",
+      },
+      {
+        "title": "두 번째 게시물",
+        "url": "https://via.placeholder.com/200",
+      },
+      {
+        "title": "세 번째 게시물",
+        "url": "https://via.placeholder.com/300",
+      },
+
+    ];
+
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return  SingleChildScrollView(
+    return SingleChildScrollView(
       child: SizedBox(
         width: double.infinity,
         height: MediaQuery.of(context).size.height,
@@ -60,6 +77,9 @@ class _BoardListState extends State<BoardList> {
                         flex: 1,
                       ),
                       Text(item['title']),
+                      const Spacer(
+                        flex: 1,
+                      ),
                     ],
                   )),
             );
