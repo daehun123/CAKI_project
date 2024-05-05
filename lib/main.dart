@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter',
       theme: ThemeData(
+          fontFamily: "Jalnan",
           primaryColor: const Color(0xFF8A9352),
           scaffoldBackgroundColor: Colors.white,
           elevatedButtonTheme: ElevatedButtonThemeData(
