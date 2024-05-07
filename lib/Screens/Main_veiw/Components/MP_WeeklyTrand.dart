@@ -58,7 +58,6 @@ final List<Widget> imageSliders = imgList
           ),
         ))
     .toList();
-
 class WeeklyTrand extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -75,18 +74,61 @@ class _WeeklyTrandState extends State<WeeklyTrand> {
     return Column(
       children: [
         Expanded(
-          child: CarouselSlider(
-            items: imageSliders,
-            carouselController: _controller,
-            options: CarouselOptions(
-              autoPlay: true,
-              enlargeCenterPage: true,
-              aspectRatio: 2.0,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  _current = index;
-                });
-              },
+          child: GestureDetector(
+            onTap: () {
+              switch (_current) {
+                case 0:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DateScreen()),
+                  );
+                  break;
+                case 1:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => StarScreen()),
+                  );
+                  break;
+                case 2:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => WeatherScreen()),
+                  );
+                  break;
+                case 3:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => IngredientScreen()),
+                  );
+                  break;
+                default:
+                // 정의되지 않은 인덱스에 대한 처리
+              }
+            },
+            child: CarouselSlider(
+              items: imageSliders.map((item) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Container(
+                      child: item,
+                      // 수정된 부분: GestureDetector로 묶인 이미지 슬라이더
+                    );
+                  },
+                );
+              }).toList(),
+              carouselController: _controller,
+              options: CarouselOptions(
+                autoPlay: true,
+                enlargeCenterPage: true,
+                aspectRatio: 2.0,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    _current = index;
+                  });
+                },
+              ),
             ),
           ),
         ),
@@ -97,47 +139,17 @@ class _WeeklyTrandState extends State<WeeklyTrand> {
               return GestureDetector(
                 onTap: () {
                   _controller.animateToPage(entry.key);
-                  // 올바른 BuildContext 사용
-                  switch (entry.key) {
-                    case 0:
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => DateScreen()),
-                      );
-                      break;
-                    case 1:
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => StarScreen()),
-                      );
-                      break;
-                    case 2:
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WeatherScreen()),
-                      );
-                      break;
-                    case 3:
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => IngredientScreen()),
-                      );
-                      break;
-                    default:
-                    // 정의되지 않은 인덱스에 대한 처리
-                  }
                 },
                 child: Container(
                   width: 12.0,
                   height: 12.0,
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                  margin:
+                  EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: (Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black)
+                        ? Colors.white
+                        : Colors.black)
                         .withOpacity(_current == entry.key ? 0.9 : 0.4),
                   ),
                 ),
