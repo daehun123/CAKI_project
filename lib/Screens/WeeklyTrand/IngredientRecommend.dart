@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class IngredienScreen extends StatelessWidget {
-  const IngredienScreen({super.key});
+class IngredientScreen extends StatelessWidget {
+  const IngredientScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
