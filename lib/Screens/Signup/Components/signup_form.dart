@@ -2,14 +2,65 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import '../../Welcome/welcome_screen.dart';
 
-class SignupForm extends StatelessWidget {
-  final signup_formkey = GlobalKey<FormState>();
-  String? pwCheck;
-
+class SignupForm extends StatefulWidget {
   SignupForm({super.key});
+
+  @override
+  State<SignupForm> createState() => _SignupFormState();
+}
+
+class _SignupFormState extends State<SignupForm> {
+  final signup_formkey = GlobalKey<FormState>();
+
+  String? pwCheck, email, nickname, password;
+
+  Future<void> signUp(String email, String nickname, String password) async {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/search?q=독도'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': email,
+        'nickname': nickname,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('회원가입 성공');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('회원가입 완료'),
+            content: Text('회원가입이 성공적으로 완료되었습니다.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('확인'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const Welcome_Screen()),
+                      (route) => false);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      print('회원가입 실패');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +72,7 @@ class SignupForm extends StatelessWidget {
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
             cursorColor: const Color(0xFF8A9352),
-            onSaved: (email) {},
+            onSaved: (value) => email = value,
             decoration: const InputDecoration(
               hintText: 'E-mail',
               prefixIcon: Padding(
@@ -32,8 +83,8 @@ class SignupForm extends StatelessWidget {
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return '필수 입력 항목입니다.';
-              } else if (RegExp(
-                  r'^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
+              } else if (!RegExp(
+                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                   .hasMatch(value)) {
                 return '이메일 형식 확인.';
               }
@@ -44,8 +95,8 @@ class SignupForm extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: TextFormField(
               textInputAction: TextInputAction.next,
-              obscureText: true,
               cursorColor: const Color(0xFF8A9352),
+              onSaved: (value) => nickname = value,
               decoration: const InputDecoration(
                 hintText: 'NickName',
                 prefixIcon: Padding(
@@ -67,6 +118,7 @@ class SignupForm extends StatelessWidget {
               textInputAction: TextInputAction.next,
               obscureText: true,
               cursorColor: const Color(0xFF8A9352),
+              onSaved: (value) => password = value,
               decoration: const InputDecoration(
                 hintText: 'Pw',
                 prefixIcon: Padding(
@@ -117,12 +169,13 @@ class SignupForm extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     if (signup_formkey.currentState!.validate()) {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                              const Welcome_Screen()),
-                              (route) => false);
+                      signup_formkey.currentState!.save();
+                      if (email != null &&
+                          nickname != null &&
+                          password != null) {
+                      signUp(email!, nickname!, password!);
+
+                      }
                     }
                   },
                   child: Text('Sign Up'.toUpperCase()),
