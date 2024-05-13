@@ -1,7 +1,9 @@
+import 'package:caki_project/Screens/Main_veiw/main_screen.dart';
 import 'package:caki_project/Screens/Preference/preference_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginForm extends StatefulWidget {
   LoginForm({super.key});
@@ -13,8 +15,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final login_formkey = GlobalKey<FormState>();
 
-  String? _email, _password;
-
+  String? email, password;
   Future<void> login(String email, String password) async {
     var url = Uri.parse('');
     var response = await http.post(url,
@@ -26,9 +27,51 @@ class _LoginFormState extends State<LoginForm> {
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       print(data['message']);
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
     } else {
       print('로그인 실패');
     }
+  }
+
+  // _fetchName() async {
+  //   final response = await http.get(Uri.parse('uri'));
+  //   if(response.statusCode == 200){
+  //     final jsonResponse = json.decode(response.body);
+  //     _nickname = jsonResponse['nickname'];
+  //   }else{
+  //     print('추출 실패');
+  //   }
+  // }
+
+  _ckFirstLogin() async{
+    final ckPrefs = await SharedPreferences.getInstance();
+    bool isFirstLogin = ckPrefs.getBool('first') ?? true;
+    if(isFirstLogin){
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => pre_choice()),
+              (route) => false);
+      await ckPrefs.setBool('first', false);
+
+    }else{
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => MyHomePage()),
+              (route) => false);
+    }
+  }
+
+  // void initState(){
+  //   super.initState();
+  //
+  // }
+
+  _checkAotoLogin() async {
+    
   }
 
   @override
@@ -41,7 +84,7 @@ class _LoginFormState extends State<LoginForm> {
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
             cursorColor: const Color(0xFF8A9352),
-            onSaved: (value) => _email = value,
+            onSaved: (value) => email = value,
             decoration: const InputDecoration(
               hintText: 'E-mail',
               prefixIcon: Padding(
@@ -62,7 +105,7 @@ class _LoginFormState extends State<LoginForm> {
               textInputAction: TextInputAction.done,
               obscureText: true,
               cursorColor: const Color(0xFF8A9352),
-              onSaved: (value) => _password = value,
+              onSaved: (value) => password = value,
               decoration: const InputDecoration(
                 hintText: 'PassWord',
                 prefixIcon: Padding(
@@ -85,15 +128,11 @@ class _LoginFormState extends State<LoginForm> {
               Expanded(
                 flex: 8,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (login_formkey.currentState!.validate()) {
                       login_formkey.currentState!.save();
-                      //login(_email!, _password!);
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => pre_choice()),
-                          (route) => false);
+                      //login(email!, password!);
+                      await _ckFirstLogin();
                     }
                   },
                   child: Text('Login'.toUpperCase()),
