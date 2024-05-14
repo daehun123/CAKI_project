@@ -21,9 +21,10 @@ class _SignupFormState extends State<SignupForm> {
 
   Future<void> signUp(String email, String nickname, String password) async {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/search?q=독도'),
+      Uri.parse('http://13.124.205.29/signup/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        //'Authorization': 'Bearer $accessToken',
       },
       body: jsonEncode(<String, String>{
         'email': email,
@@ -170,12 +171,7 @@ class _SignupFormState extends State<SignupForm> {
                   onPressed: () {
                     if (signup_formkey.currentState!.validate()) {
                       signup_formkey.currentState!.save();
-                      if (email != null &&
-                          nickname != null &&
-                          password != null) {
                       signUp(email!, nickname!, password!);
-
-                      }
                     }
                   },
                   child: Text('Sign Up'.toUpperCase()),

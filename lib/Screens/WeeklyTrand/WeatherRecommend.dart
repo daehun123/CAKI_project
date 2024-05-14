@@ -37,15 +37,13 @@ class _WeatherScreenState extends State<WeatherScreen> {
     });
 
     Future<void> shareLocation() async {
-      final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/search?q=독도'),
+      var queryParams = {'nx': latitude, 'ny': longitude};
+      var queryString = Uri(queryParameters: queryParams).query;
+      final response = await http.get(
+        Uri.parse('http://127.0.0.1:8000/sea$queryString'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, String>{
-          'latitude' : latitude!,
-          'longitude' : longitude!,
-        }),
       );
       if(response.statusCode == 200){
         print('전송 완료');

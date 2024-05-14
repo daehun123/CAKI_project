@@ -17,9 +17,10 @@ class _LoginFormState extends State<LoginForm> {
 
   String? email, password;
   Future<void> login(String email, String password) async {
-    var url = Uri.parse('');
+    var url = Uri.parse('http://13.124.205.29/authuser/');
     var response = await http.post(url,
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json'
+        },
         body: jsonEncode({
           'email': email,
           'password': password,
@@ -35,15 +36,6 @@ class _LoginFormState extends State<LoginForm> {
     }
   }
 
-  // _fetchName() async {
-  //   final response = await http.get(Uri.parse('uri'));
-  //   if(response.statusCode == 200){
-  //     final jsonResponse = json.decode(response.body);
-  //     _nickname = jsonResponse['nickname'];
-  //   }else{
-  //     print('추출 실패');
-  //   }
-  // }
 
   _ckFirstLogin() async{
     final ckPrefs = await SharedPreferences.getInstance();
@@ -65,14 +57,6 @@ class _LoginFormState extends State<LoginForm> {
     }
   }
 
-  // void initState(){
-  //   super.initState();
-  //
-  // }
-
-  _checkAotoLogin() async {
-    
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +115,7 @@ class _LoginFormState extends State<LoginForm> {
                   onPressed: () async {
                     if (login_formkey.currentState!.validate()) {
                       login_formkey.currentState!.save();
-                      //login(email!, password!);
+                      login(email!, password!);
                       await _ckFirstLogin();
                     }
                   },
