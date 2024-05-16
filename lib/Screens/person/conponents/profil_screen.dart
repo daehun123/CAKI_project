@@ -14,6 +14,7 @@ class Profil_body extends StatefulWidget {
 
 class _Profil_bodyState extends State<Profil_body> {
   Map<String, dynamic> _profil_data = {};
+  String? accessToken;
 
   @override
   void initState() {
@@ -22,20 +23,20 @@ class _Profil_bodyState extends State<Profil_body> {
   }
 
   _fetchProfil() async {
-    // final response = await http.get(Uri.parse('uri'));
-    // if (response.statusCode == 200) {
-    //   setState(() {
-    //     _profil_data = json.decode(response.body);
-    //   });
-    // } else {
-    //   throw Exception('Fail');
-    // }
-    _profil_data = {
-      "name": "대훈",
-      "bio": "소프트웨어학과 파이팅",
-      "imageUrl": "https://via.placeholder.com/150",
-      "posts": Null
-    };
+    final response = await http.get(Uri.parse('http://13.124.205.29/'));
+    if (response.statusCode == 200) {
+      setState(() {
+        _profil_data = json.decode(response.body);
+      });
+    } else {
+      throw Exception('Fail');
+    }
+    // _profil_data = {
+    //   "name": "대훈",
+    //   "bio": "소프트웨어학과 파이팅",
+    //   "imageUrl": "https://via.placeholder.com/150",
+    //   "posts": Null
+    // };
   }
 
   @override

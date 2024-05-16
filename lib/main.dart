@@ -1,6 +1,8 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 import 'Screens/Welcome/welcome_screen.dart';
 import 'Screens/splash_screen.dart';
 
@@ -8,10 +10,70 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  String? latitude;
+  String? longitude;
+  StreamSubscription<Position>? positionStreamSubscription;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getGeoDataAndSend();
+  // }
+  //
+  // getGeoDataAndSend() async {
+  //   LocationPermission permission = await Geolocator.checkPermission();
+  //   if (permission == LocationPermission.denied) {
+  //     permission = await Geolocator.requestPermission();
+  //     if (permission == LocationPermission.denied) {
+  //       return Future.error("permissions are denied");
+  //     }
+  //   }
+  //   ListeningLocation();
+  // }
+  //
+  // ListeningLocation() {
+  //   const locationSet = LocationSettings(
+  //     accuracy: LocationAccuracy.high,
+  //     distanceFilter: 10,
+  //   );
+  //   positionStreamSubscription =
+  //       Geolocator.getPositionStream(locationSettings: locationSet)
+  //           .listen((Position position) {
+  //     latitude = position.latitude.toString();
+  //     longitude = position.longitude.toString();
+  //   });
+  //   shareLocation();
+  // }
+  //
+  // Future<void> shareLocation() async {
+  //   var queryParams = {'nx': latitude, 'ny': longitude};
+  //   var queryString = Uri(queryParameters: queryParams).query;
+  //   final response = await http.get(
+  //     Uri.parse('http://127.0.0.1:8000/sea?$queryString'),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     },
+  //   );
+  //   if (response.statusCode == 200) {
+  //     print('전송 완료');
+  //   } else {
+  //     print('전송 실패');
+  //   }
+  // }
+  //
+  // @override
+  // void dispose(){
+  //   positionStreamSubscription?.cancel();
+  //   super.dispose();
+  // }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,14 +100,13 @@ class MyApp extends StatelessWidget {
             fillColor: Colors.white,
             iconColor: Color(0xFF8A9352),
             prefixIconColor: Color(0xFF8A9352),
-            contentPadding: EdgeInsets.symmetric(
-                horizontal: 16.0, vertical: 16.0),
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(30)),
               borderSide: BorderSide.none,
             ),
           )),
-
       home: FutureBuilder(
         future: Future.delayed(
             const Duration(seconds: 3), () => "Intro Completed."),
