@@ -1,6 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -20,6 +23,9 @@ class _SignupFormState extends State<SignupForm> {
   String? pwCheck, email, nickname, password;
 
   Future<void> signUp(String email, String nickname, String password) async {
+    final ByteData bytes = await rootBundle.load('assets/Img/userprofil');
+    final Uint8List list = bytes.buffer.asUint8List();
+
     final response = await http.post(
       Uri.parse('http://13.124.205.29/signup/'),
       headers: <String, String>{
@@ -30,6 +36,7 @@ class _SignupFormState extends State<SignupForm> {
         'email': email,
         'nickname': nickname,
         'password': password,
+        'image' : base64Encode(list),
       }),
     );
 
