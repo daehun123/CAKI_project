@@ -23,7 +23,7 @@ class _SignupFormState extends State<SignupForm> {
   String? pwCheck, email, nickname, password;
 
   Future<void> signUp(String email, String nickname, String password) async {
-    final ByteData bytes = await rootBundle.load('assets/Img/userprofil');
+    final ByteData bytes = await rootBundle.load('assets/Img/userprofil.jpg');
     final Uint8List list = bytes.buffer.asUint8List();
 
     final response = await http.post(

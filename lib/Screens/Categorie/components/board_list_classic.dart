@@ -50,7 +50,10 @@ class _BoardListState extends State<BoardList> {
     return SingleChildScrollView(
       child: SizedBox(
         width: double.infinity,
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery
+            .of(context)
+            .size
+            .height,
         child: ListView.builder(
           itemCount: _board_data.length,
           itemBuilder: (BuildContext context, int index) {
@@ -88,4 +91,6 @@ class _BoardListState extends State<BoardList> {
       ),
     );
   }
+
+
 }

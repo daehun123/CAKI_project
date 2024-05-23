@@ -1,8 +1,9 @@
 import 'package:caki_project/Screens/Main_veiw/main_screen.dart';
 import 'package:caki_project/Screens/Preference/preference_screen.dart';
+import 'package:caki_project/Screens/Welcome/welcome_screen.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginForm extends StatefulWidget {
@@ -16,47 +17,78 @@ class _LoginFormState extends State<LoginForm> {
   final login_formkey = GlobalKey<FormState>();
 
   String? email, password;
+  static const storage = FlutterSecureStorage();
+
   Future<void> login(String email, String password) async {
-    var url = Uri.parse('http://13.124.205.29/authuser/');
-    var response = await http.post(url,
-        headers: {'Content-Type': 'application/json'
+    var url = 'http://13.124.205.29/authuser/';
+    var dio = Dio();
+    var data = {
+      'email': email,
+      'password': password,
+    };
+    try {
+      var response = await dio.post(
+        url,
+        data: data,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        String _accesstoken = response.data['access_token'];
+        String _refreshtoken = response.data['refresh_token'];
+        print('token : $_accesstoken');
+        print('token : $_refreshtoken');
+        await storage.write(key: 'jwt_accessToken', value: _accesstoken);
+        await storage.write(key: 'jwt_refreshToken', value: _refreshtoken);
+        _ckFirstLogin();
+      }
+    } catch (e) {
+      print("로그인 에러");
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('로그인 실패'),
+            content: Text('아이디,비밀번호를 확인해주세요.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('확인'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                          const Welcome_Screen()),
+                          (route) => false);
+                },
+              ),
+            ],
+          );
         },
-        body: jsonEncode({
-          'email': email,
-          'password': password,
-        }));
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      print(data['message']);
-
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', true);
-    } else {
-      print('로그인 실패');
+      );
     }
   }
 
-
-  _ckFirstLogin() async{
+  _ckFirstLogin() async {
     final ckPrefs = await SharedPreferences.getInstance();
-    bool isFirstLogin = ckPrefs.getBool('first') ?? true;
-    if(isFirstLogin){
+    bool isFirstLogin = ckPrefs.getBool('first$email') ?? true;
+    if (isFirstLogin) {
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => pre_choice()),
-              (route) => false);
-      await ckPrefs.setBool('first', false);
-
-    }else{
+          MaterialPageRoute(builder: (BuildContext context) => pre_choice()),
+          (route) => false);
+      await ckPrefs.setBool('first$email', false);
+    } else {
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => MyHomePage()),
-              (route) => false);
+          MaterialPageRoute(builder: (BuildContext context) => MyHomePage()),
+          (route) => false);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +148,6 @@ class _LoginFormState extends State<LoginForm> {
                     if (login_formkey.currentState!.validate()) {
                       login_formkey.currentState!.save();
                       login(email!, password!);
-                      await _ckFirstLogin();
                     }
                   },
                   child: Text('Login'.toUpperCase()),
