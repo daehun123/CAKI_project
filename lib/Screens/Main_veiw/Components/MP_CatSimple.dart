@@ -20,6 +20,10 @@ class CatSimple extends StatelessWidget {
       child: Container(
         width: width,
         decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.fill,
+            image: AssetImage('assets/Img/simple.png'),
+          ),
           color: Colors.white,
           borderRadius: BorderRadius.circular(5),
           border: Border.all(

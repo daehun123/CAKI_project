@@ -16,7 +16,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // 가져온 MediaQuery에서 화면의 가로 길이를 사용하여 각 위젯의 너비를 계산합니다.
     final screenWidth = MediaQuery.of(context).size.width;
-    final WTWidth = (screenWidth -20);
+    final WTWidth = (screenWidth - 20);
     final katWidth = WTWidth / 5; // 총 가로 길이에서 간격을 뺀 후, 5개의 위젯으로 나눕니다.
 
     return Scaffold(
