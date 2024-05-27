@@ -5,10 +5,17 @@ import 'package:group_button/group_button.dart';
 
 import '../Main_veiw/main_screen.dart';
 
-class pre_choice extends StatelessWidget {
-  List<String> choice_list = [];
+class pre_choice extends StatefulWidget {
 
   pre_choice({super.key});
+
+  @override
+  State<pre_choice> createState() => _pre_choiceState();
+}
+
+class _pre_choiceState extends State<pre_choice> {
+  List<String> choice_list = [];
+
 
   @override
   Widget build(BuildContext context) {

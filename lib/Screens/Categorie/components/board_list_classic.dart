@@ -1,16 +1,17 @@
 import 'dart:convert';
 
+import 'package:caki_project/Screens/BoardView/board_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class BoardList extends StatefulWidget {
-  const BoardList({super.key});
+class BoardList_classic extends StatefulWidget {
+  const BoardList_classic({super.key});
 
   @override
-  State<BoardList> createState() => _BoardListState();
+  State<BoardList_classic> createState() => _BoardListState();
 }
 
-class _BoardListState extends State<BoardList> {
+class _BoardListState extends State<BoardList_classic> {
   List<dynamic> _board_data = [];
 
   @override
@@ -20,29 +21,13 @@ class _BoardListState extends State<BoardList> {
   }
 
   _fetchBoard() async {
-    // final response = await http.get(Uri.parse('uri'));
-    // if (response.statusCode == 200) {
-    //   _board_data = json.decode(response.body);
-    // } else {
-    //   throw Exception('Fail');
-    // }
-    _board_data = [
-      {
-        "title": "첫 번째 게시물",
-        "url": "https://via.placeholder.com/100",
-      },
-      {
-        "title": "두 번째 게시물",
-        "url": "https://via.placeholder.com/200",
-      },
-      {
-        "title": "세 번째 게시물",
-        "url": "https://via.placeholder.com/300",
-      },
-
-    ];
-
-    setState(() {});
+    final response =
+        await http.get(Uri.parse('http://13.124.205.29/main/classic/'));
+    if (response.statusCode == 200) {
+      _board_data = json.decode(response.body);
+    } else {
+      throw Exception('Fail');
+    }
   }
 
   @override
@@ -50,10 +35,7 @@ class _BoardListState extends State<BoardList> {
     return SingleChildScrollView(
       child: SizedBox(
         width: double.infinity,
-        height: MediaQuery
-            .of(context)
-            .size
-            .height,
+        height: MediaQuery.of(context).size.height,
         child: ListView.builder(
           itemCount: _board_data.length,
           itemBuilder: (BuildContext context, int index) {
@@ -61,7 +43,12 @@ class _BoardListState extends State<BoardList> {
             return Padding(
               padding: const EdgeInsets.all(10.0),
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => board_viewer(boardid: item['idpost'])));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     foregroundColor: Colors.black,
@@ -72,14 +59,14 @@ class _BoardListState extends State<BoardList> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Image.network(
-                        item['url'],
+                        item['post_image'],
                         fit: BoxFit.fill,
                         width: 100,
                       ),
                       const Spacer(
                         flex: 1,
                       ),
-                      Text(item['title']),
+                      Text(item['post_title']),
                       const Spacer(
                         flex: 1,
                       ),
@@ -91,6 +78,4 @@ class _BoardListState extends State<BoardList> {
       ),
     );
   }
-
-
 }

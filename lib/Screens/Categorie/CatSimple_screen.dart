@@ -1,3 +1,4 @@
+import 'package:caki_project/Screens/Categorie/components/board_list_simple.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,7 @@ class SimpleScreen extends StatelessWidget {
           title: Text('Simple'),
           backgroundColor: Color(0xFF8A9352),
         ),
+        body: BoardList_simple(),
         bottomNavigationBar: Bottom()
     );
   }

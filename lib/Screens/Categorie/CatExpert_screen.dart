@@ -1,3 +1,4 @@
+import 'package:caki_project/Screens/Categorie/components/board_list_expert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,7 @@ class ExpertScreen extends StatelessWidget {
           title: Text('Expert'),
           backgroundColor: Color(0xFF8A9352),
         ),
+        body: BoardList_expert(),
         bottomNavigationBar: Bottom()
     );
   }

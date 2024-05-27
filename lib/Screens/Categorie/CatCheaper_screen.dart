@@ -1,4 +1,5 @@
 import 'package:caki_project/Components/constants.dart';
+import 'package:caki_project/Screens/Categorie/components/board_list_cheaper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,7 @@ class CheaperScreen extends StatelessWidget {
           title: Text('Cheaper'),
           backgroundColor: kColor,
         ),
+        body: BoardList_cheaper(),
         bottomNavigationBar: Bottom()
     );
   }
