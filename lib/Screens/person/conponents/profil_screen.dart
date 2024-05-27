@@ -34,9 +34,9 @@ class _Profil_bodyState extends State<Profil_body> {
     //   throw Exception('Fail');
     // }
     _profil_data = {
-      "name": "대훈",
-      "bio": "소프트웨어학과 파이팅",
-      "imageUrl": "https://via.placeholder.com/150",
+      "nickname": "대훈",
+      "introduce": "소프트웨어학과 파이팅",
+      "image_path": "https://via.placeholder.com/150",
       "posts": Null
     };
   }
@@ -52,12 +52,12 @@ class _Profil_bodyState extends State<Profil_body> {
               children: [
                 CircleAvatar(
                   radius: 50,
-                  backgroundImage: NetworkImage(_profil_data['imageUrl']),
+                  backgroundImage: NetworkImage(_profil_data['image_path']),
                 ),
                 Column(
                   children: [
                     Text(
-                      _profil_data['name'],
+                      _profil_data['nickname'],
                       style: TextStyle(
                         fontSize: 24,
                       ),
@@ -65,7 +65,7 @@ class _Profil_bodyState extends State<Profil_body> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: Text(
-                        _profil_data['bio'],
+                        _profil_data['introduce'],
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
@@ -109,7 +109,7 @@ class _Profil_bodyState extends State<Profil_body> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => board_viewer(boardid: 1)), // 설정 페이지로 이동
+                MaterialPageRoute(builder: (context) => board_viewer(boardid: 1)), 
               );
             },
           )

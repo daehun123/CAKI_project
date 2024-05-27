@@ -59,7 +59,7 @@ class _BoardListState extends State<BoardList_classic> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Image.network(
-                        item['post_image'],
+                        item['post_image'][0],
                         fit: BoxFit.fill,
                         width: 100,
                       ),
