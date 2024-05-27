@@ -16,7 +16,7 @@ class ClassicScreen extends StatelessWidget {
           title: const Text('Classic'),
           backgroundColor: kColor,
         ),
-        body: BoardList(),
+        body: BoardList_classic(),
         bottomNavigationBar: Bottom());
   }
 }

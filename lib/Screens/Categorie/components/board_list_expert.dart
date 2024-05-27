@@ -1,17 +1,16 @@
 import 'dart:convert';
 
-import 'package:caki_project/Screens/BoardView/board_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class BoardList_classic extends StatefulWidget {
-  const BoardList_classic({super.key});
+class BoardList_expert extends StatefulWidget {
+  const BoardList_expert({super.key});
 
   @override
-  State<BoardList_classic> createState() => _BoardListState();
+  State<BoardList_expert> createState() => _BoardListState();
 }
 
-class _BoardListState extends State<BoardList_classic> {
+class _BoardListState extends State<BoardList_expert> {
   List<dynamic> _board_data = [];
 
   @override
@@ -21,8 +20,7 @@ class _BoardListState extends State<BoardList_classic> {
   }
 
   _fetchBoard() async {
-    final response =
-        await http.get(Uri.parse('http://13.124.205.29/main/classic/'));
+    final response = await http.get(Uri.parse('http://13.124.205.29/main/expert/'));
     if (response.statusCode == 200) {
       _board_data = json.decode(response.body);
     } else {
@@ -35,7 +33,10 @@ class _BoardListState extends State<BoardList_classic> {
     return SingleChildScrollView(
       child: SizedBox(
         width: double.infinity,
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery
+            .of(context)
+            .size
+            .height,
         child: ListView.builder(
           itemCount: _board_data.length,
           itemBuilder: (BuildContext context, int index) {
@@ -43,12 +44,7 @@ class _BoardListState extends State<BoardList_classic> {
             return Padding(
               padding: const EdgeInsets.all(10.0),
               child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => board_viewer(boardid: item['idpost'])));
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     foregroundColor: Colors.black,
@@ -78,4 +74,6 @@ class _BoardListState extends State<BoardList_classic> {
       ),
     );
   }
+
+
 }

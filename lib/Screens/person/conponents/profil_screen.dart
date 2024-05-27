@@ -1,4 +1,5 @@
 import 'package:caki_project/Components/constants.dart';
+import 'package:caki_project/Screens/BoardView/board_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -15,6 +16,7 @@ class Profil_body extends StatefulWidget {
 class _Profil_bodyState extends State<Profil_body> {
   Map<String, dynamic> _profil_data = {};
   String? accessToken;
+  var count;
 
   @override
   void initState() {
@@ -23,20 +25,20 @@ class _Profil_bodyState extends State<Profil_body> {
   }
 
   _fetchProfil() async {
-    final response = await http.get(Uri.parse('http://13.124.205.29/'));
-    if (response.statusCode == 200) {
-      setState(() {
-        _profil_data = json.decode(response.body);
-      });
-    } else {
-      throw Exception('Fail');
-    }
-    // _profil_data = {
-    //   "name": "대훈",
-    //   "bio": "소프트웨어학과 파이팅",
-    //   "imageUrl": "https://via.placeholder.com/150",
-    //   "posts": Null
-    // };
+    // final response = await http.get(Uri.parse('http://13.124.205.29/'));
+    // if (response.statusCode == 200) {
+    //   setState(() {
+    //     _profil_data = json.decode(response.body);
+    //   });
+    // } else {
+    //   throw Exception('Fail');
+    // }
+    _profil_data = {
+      "name": "대훈",
+      "bio": "소프트웨어학과 파이팅",
+      "imageUrl": "https://via.placeholder.com/150",
+      "posts": Null
+    };
   }
 
   @override
@@ -107,7 +109,7 @@ class _Profil_bodyState extends State<Profil_body> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyHomePage()), // 설정 페이지로 이동
+                MaterialPageRoute(builder: (context) => board_viewer(boardid: 1)), // 설정 페이지로 이동
               );
             },
           )

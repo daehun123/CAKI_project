@@ -22,58 +22,58 @@ class _MyAppState extends State<MyApp> {
   String? longitude;
   StreamSubscription<Position>? positionStreamSubscription;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getGeoDataAndSend();
-  // }
-  //
-  // getGeoDataAndSend() async {
-  //   LocationPermission permission = await Geolocator.checkPermission();
-  //   if (permission == LocationPermission.denied) {
-  //     permission = await Geolocator.requestPermission();
-  //     if (permission == LocationPermission.denied) {
-  //       return Future.error("permissions are denied");
-  //     }
-  //   }
-  //   ListeningLocation();
-  // }
-  //
-  // ListeningLocation() {
-  //   const locationSet = LocationSettings(
-  //     accuracy: LocationAccuracy.high,
-  //     distanceFilter: 10,
-  //   );
-  //   positionStreamSubscription =
-  //       Geolocator.getPositionStream(locationSettings: locationSet)
-  //           .listen((Position position) {
-  //     latitude = position.latitude.toString();
-  //     longitude = position.longitude.toString();
-  //   });
-  //   shareLocation();
-  // }
-  //
-  // Future<void> shareLocation() async {
-  //   var queryParams = {'nx': latitude, 'ny': longitude};
-  //   var queryString = Uri(queryParameters: queryParams).query;
-  //   final response = await http.get(
-  //     Uri.parse('http://127.0.0.1:8000/sea?$queryString'),
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //     },
-  //   );
-  //   if (response.statusCode == 200) {
-  //     print('전송 완료');
-  //   } else {
-  //     print('전송 실패');
-  //   }
-  // }
-  //
-  // @override
-  // void dispose(){
-  //   positionStreamSubscription?.cancel();
-  //   super.dispose();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    getGeoDataAndSend();
+  }
+
+  getGeoDataAndSend() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error("permissions are denied");
+      }
+    }
+    ListeningLocation();
+  }
+
+  ListeningLocation() {
+    const locationSet = LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 10,
+    );
+    positionStreamSubscription =
+        Geolocator.getPositionStream(locationSettings: locationSet)
+            .listen((Position position) {
+      latitude = position.latitude.toString();
+      longitude = position.longitude.toString();
+    });
+    shareLocation();
+  }
+
+  Future<void> shareLocation() async {
+    var queryParams = {'nx': latitude, 'ny': longitude};
+    var queryString = Uri(queryParameters: queryParams).query;
+    final response = await http.get(
+      Uri.parse('http://13.124.205.29/main?$queryString'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+      print('전송 완료');
+    } else {
+      print('전송 실패');
+    }
+  }
+
+  @override
+  void dispose(){
+    positionStreamSubscription?.cancel();
+    super.dispose();
+  }
 
 
   @override
