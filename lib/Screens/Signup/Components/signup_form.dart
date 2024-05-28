@@ -36,7 +36,7 @@ class _SignupFormState extends State<SignupForm> {
         'email': email,
         'nickname': nickname,
         'password': password,
-        'image' : base64Encode(list),
+        'image_path' : base64Encode(list),
       }),
     );
 
