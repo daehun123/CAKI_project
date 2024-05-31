@@ -8,6 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 import '../../Welcome/welcome_screen.dart';
+import '../../splash_screen.dart';
 
 class BoardList_classic extends StatefulWidget {
   const BoardList_classic({super.key});
@@ -19,12 +20,19 @@ class BoardList_classic extends StatefulWidget {
 class _BoardListState extends State<BoardList_classic> {
   List<dynamic> _board_data = [];
   static const storage = FlutterSecureStorage();
+  bool isLoading = true;
   @override
   void initState() {
     super.initState();
-    _fetchBoard();
+    _loadDate();
   }
 
+  Future<void> _loadDate() async{
+    await _fetchBoard();
+    setState(() {
+      isLoading = false;
+    });
+  }
   _fetchBoard() async {
     var url = 'http://13.124.205.29/main/classic/';
     var dio = Dio();
@@ -57,7 +65,13 @@ class _BoardListState extends State<BoardList_classic> {
             ),
           );
           setState(() {
-            _board_data = jsonDecode(response.data);
+            if (response.data is List) {
+              _board_data = response.data;
+            } else if (response.data is Map) {
+              _board_data = (response.data['post_list'] as List).cast<dynamic>();
+            } else {
+              print('Response data is not a List or Map');
+            }
           });
         } catch (e) {
           print('로그아웃 해');
@@ -76,8 +90,8 @@ class _BoardListState extends State<BoardList_classic> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  const Welcome_Screen()),
-                          (route) => false);
+                              const Welcome_Screen()),
+                              (route) => false);
                     },
                   ),
                 ],
@@ -93,10 +107,10 @@ class _BoardListState extends State<BoardList_classic> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return isLoading ? Spalsh_Screen():SingleChildScrollView(
       child: SizedBox(
         width: double.infinity,
-        height: MediaQuery.of(context).size.height*(4/5),
+        height: MediaQuery.of(context).size.height * (4 / 5),
         child: ListView.builder(
           itemCount: _board_data.length,
           itemBuilder: (BuildContext context, int index) {
@@ -131,41 +145,63 @@ class _BoardListState extends State<BoardList_classic> {
                       // const Spacer(
                       //   flex: 1,
                       // ),
-                      SizedBox(width: 50,),
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              SizedBox(width: 130,),
-                              Text(item['writer_nickname']),
-                            ],
-                          ),
-                          Spacer(flex: 1,),
-                          Text(item['post_title'],style: TextStyle(fontSize: 22),),
-                          Spacer(flex: 1,),
-                          Row(
-                            children: [
-                              Row(
-                                children: [
-                                  if (item['post_tag'].isNotEmpty)
-                                    for (int i = item['post_tag'].length - 2; i < item['post_tag'].length; i++)
-                                      i < item['post_tag'].length - 1
-                                          ? Text('#' + item['post_tag'][i] + ' ')
-                                          : Text('#' + item['post_tag'][i]),
-                                ],
-                              ),
-                              SizedBox(width: 40,),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Icon(Icons.favorite,color: Colors.red,size: 20,),
-                                  Text(item['post_like'].toString()),
-                                ],
-                              )
-                            ],
-                          ),
-
-                        ],
+                      SizedBox(
+                        width: 50,
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                // SizedBox(
+                                //   width: 130,
+                                // ),
+                                Text(item['writer_nickname']),
+                              ],
+                            ),
+                            const Spacer(
+                              flex: 1,
+                            ),
+                            Text(
+                              item['post_title'],
+                              style: const TextStyle(fontSize: 22),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const Spacer(
+                              flex: 1,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    if (item['post_tag'].isNotEmpty)
+                                      for (int i = item['post_tag'].length - 2;
+                                      i < item['post_tag'].length;
+                                      i++)
+                                        i < item['post_tag'].length - 1
+                                            ? Text(
+                                            '#' + item['post_tag'][i] + ' ')
+                                            : Text('#' + item['post_tag'][i]),
+                                  ],
+                                ),
+                                // const SizedBox(
+                                //   width: 40,
+                                // ),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.favorite,
+                                      color: Colors.red,
+                                      size: 20,
+                                    ),
+                                    Text(item['post_like'].toString()),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       // const Spacer(
                       //   flex: 1,

@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:caki_project/Screens/splash_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -19,12 +21,19 @@ class BoardList_simple extends StatefulWidget {
 class _BoardListState extends State<BoardList_simple> {
   List<dynamic> _board_data = [];
   static const storage = FlutterSecureStorage();
+  bool isLoading = true;
   @override
   void initState() {
     super.initState();
-    _fetchBoard();
+    _loadDate();
   }
 
+  Future<void> _loadDate() async{
+    await _fetchBoard();
+    setState(() {
+      isLoading = false;
+    });
+  }
   _fetchBoard() async {
     var url = 'http://13.124.205.29/main/simple/';
     var dio = Dio();
@@ -99,7 +108,7 @@ class _BoardListState extends State<BoardList_simple> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return isLoading ? Spalsh_Screen():SingleChildScrollView(
       child: SizedBox(
         width: double.infinity,
         height: MediaQuery.of(context).size.height * (4 / 5),
@@ -140,56 +149,60 @@ class _BoardListState extends State<BoardList_simple> {
                       SizedBox(
                         width: 50,
                       ),
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              // SizedBox(
-                              //   width: 130,
-                              // ),
-                              Text(item['writer_nickname']),
-                            ],
-                          ),
-                          const Spacer(
-                            flex: 1,
-                          ),
-                          Text(
-                            item['post_title'],
-                            style: const TextStyle(fontSize: 22),
-                          ),
-                          const Spacer(
-                            flex: 1,
-                          ),
-                          Row(
-                            children: [
-                              Row(
-                                children: [
-                                  if (item['post_tag'].isNotEmpty)
-                                    for (int i = item['post_tag'].length - 2;
-                                        i < item['post_tag'].length;
-                                        i++)
-                                      i < item['post_tag'].length - 1
-                                          ? Text(
-                                              '#' + item['post_tag'][i] + ' ')
-                                          : Text('#' + item['post_tag'][i]),
-                                ],
-                              ),
-                              // const SizedBox(
-                              //   width: 40,
-                              // ),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.favorite,
-                                    color: Colors.red,
-                                    size: 20,
-                                  ),
-                                  Text(item['post_like'].toString()),
-                                ],
-                              )
-                            ],
-                          ),
-                        ],
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                // SizedBox(
+                                //   width: 130,
+                                // ),
+                                Text(item['writer_nickname']),
+                              ],
+                            ),
+                            const Spacer(
+                              flex: 1,
+                            ),
+                            Text(
+                              item['post_title'],
+                              style: const TextStyle(fontSize: 22),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const Spacer(
+                              flex: 1,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    if (item['post_tag'].isNotEmpty)
+                                      for (int i = item['post_tag'].length - 2;
+                                          i < item['post_tag'].length;
+                                          i++)
+                                        i < item['post_tag'].length - 1
+                                            ? Text(
+                                                '#' + item['post_tag'][i] + ' ')
+                                            : Text('#' + item['post_tag'][i]),
+                                  ],
+                                ),
+                                // const SizedBox(
+                                //   width: 40,
+                                // ),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.favorite,
+                                      color: Colors.red,
+                                      size: 20,
+                                    ),
+                                    Text(item['post_like'].toString()),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       // const Spacer(
                       //   flex: 1,
