@@ -1,13 +1,18 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'Components/mainprovider.dart';
 import 'Screens/Welcome/welcome_screen.dart';
 import 'Screens/splash_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+      ChangeNotifierProvider(create: (_) => MainProvider(),child : const MyApp())
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -70,11 +75,10 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     positionStreamSubscription?.cancel();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
