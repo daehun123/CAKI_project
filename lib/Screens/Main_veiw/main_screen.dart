@@ -1,6 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
+import '../../Components/mainprovider.dart';
+import '../Welcome/welcome_screen.dart';
 import 'Bottom_main.dart';
 import 'Components/MP_CatCheaper.dart';
 import 'Components/MP_CatClassic.dart';
@@ -9,8 +14,86 @@ import 'Components/MP_CatSimple.dart';
 import 'Components/MP_WeeklyTrand.dart';
 import 'Top_main.dart';
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  static const storage = FlutterSecureStorage();
+
+  void initState(){
+    super.initState();
+  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    shareLocation();
+  }
+  Future<void> shareLocation() async {
+    final provider = Provider.of<MainProvider>(context,listen: false);
+
+    final main_Location = provider.location;
+    double? nx = double.tryParse(main_Location.latitude.toString());
+    double? ny = double.tryParse(main_Location.longitude.toString());
+    var queryParams = {
+      'nx': nx?.toStringAsFixed(0) ?? '0',
+      'ny': ny?.toStringAsFixed(0) ?? '0'
+    };
+    var queryString = Uri(queryParameters: queryParams).query;
+    var url = 'http://13.124.205.29/main?$queryString';
+    var dio = Dio();
+    String? access_token = await storage.read(key: 'jwt_accessToken');
+    String? refresh_token = await storage.read(key: 'jwt_refreshToken');
+
+    try {
+      var response = await dio.get(
+        url,
+        options: Options(
+          headers: {'Authorization': 'Bearer $access_token'},
+        ),
+      );
+      if (response.statusCode == 200) {
+        print(queryString);
+      } else if (response.statusCode == 401) {
+        try {
+          response = await dio.get(
+            url,
+            options: Options(
+              headers: {'Authorization': 'Bearer $refresh_token'},
+            ),
+          );
+        } catch (e) {
+          print('로그아웃 해');
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('토큰 만료'),
+                content: Text('다시 로그인 해주세요.'),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('확인'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const Welcome_Screen()),
+                          (route) => false);
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      }
+    } catch (e) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +110,9 @@ class MyHomePage extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Expanded(child:WeeklyTrand(),),
+          Expanded(
+            child: WeeklyTrand(),
+          ),
           Expanded(
             child: Container(
               alignment: Alignment.center,

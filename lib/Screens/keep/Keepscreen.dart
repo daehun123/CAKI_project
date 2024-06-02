@@ -1,4 +1,5 @@
 import 'package:caki_project/Screens/Main_veiw/main_screen.dart';
+import 'package:caki_project/Screens/keep/keep_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Main_veiw/Bottom_main.dart';
@@ -22,9 +23,7 @@ class KeepScreen extends StatelessWidget {
         ),
         backgroundColor: Color(0xFF8A9352),
       ),
-      body: Center(
-        child: Text('이것은 두 번째 화면입니다.'),
-      ),
+      body: const BoardList_keep(),
       bottomNavigationBar: Bottom(),
     );
   }
