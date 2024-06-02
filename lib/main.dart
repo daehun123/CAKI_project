@@ -45,6 +45,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   ListeningLocation() {
+    final provider = Provider.of<MainProvider>(context,listen: false);
     const locationSet = LocationSettings(
       accuracy: LocationAccuracy.high,
       distanceFilter: 10,
@@ -54,25 +55,11 @@ class _MyAppState extends State<MyApp> {
             .listen((Position position) {
       latitude = position.latitude.toString();
       longitude = position.longitude.toString();
+      provider.updateLocation(latitude, longitude);
     });
-    shareLocation();
   }
 
-  Future<void> shareLocation() async {
-    var queryParams = {'nx': latitude, 'ny': longitude};
-    var queryString = Uri(queryParameters: queryParams).query;
-    final response = await http.get(
-      Uri.parse('http://13.124.205.29/main?$queryString'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-    if (response.statusCode == 200) {
-      print('전송 완료');
-    } else {
-      print('전송 실패');
-    }
-  }
+
 
   @override
   void dispose() {

@@ -44,6 +44,32 @@ class _LoginFormState extends State<LoginForm> {
         await storage.write(key: 'jwt_accessToken', value: _accesstoken);
         await storage.write(key: 'jwt_refreshToken', value: _refreshtoken);
         _ckFirstLogin();
+
+      }else{
+        print("로그인 에러");
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('로그인 실패'),
+              content: Text('아이디,비밀번호를 확인해주세요.'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('확인'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                            const Welcome_Screen()),
+                            (route) => false);
+                  },
+                ),
+              ],
+            );
+          },
+        );
       }
     } catch (e) {
       print("로그인 에러");

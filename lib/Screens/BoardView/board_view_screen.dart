@@ -1,12 +1,16 @@
 import 'dart:convert';
 
 import 'package:caki_project/Components/constants.dart';
+import 'package:caki_project/Components/location.dart';
+import 'package:caki_project/Components/mainprovider.dart';
 import 'package:caki_project/Screens/person/Personscreen.dart';
 import 'package:caki_project/Screens/splash_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 
 import '../Main_veiw/Bottom_main.dart';
 import '../Welcome/welcome_screen.dart';
@@ -22,8 +26,7 @@ class board_viewer extends StatefulWidget {
 
 class _board_viewerState extends State<board_viewer> {
   List<dynamic> _board_data = [];
-  // List<String> ingredients = [    '재료1',    '재료2',    '재료3',    '재료4',    '재료5',  ];
-  // List<String> instructions = [    '만드는 법 1',    '만드는 법 2',    '만드는 법 3',    '만드는 법 4',    '만드는 법 5',  ];
+
   static const storage = FlutterSecureStorage();
   bool like = false;
   bool bookmark = false;
@@ -56,13 +59,12 @@ class _board_viewerState extends State<board_viewer> {
           headers: {'Authorization': 'Bearer $access_token'},
         ),
       );
-
       if (response.statusCode == 200) {
         print(response.data['user_info']);
         setState(() {
           _board_data = [response.data];
-          bookmark = _board_data[0]['post_keep']['keep_exists'];
-          like = _board_data[0]['post_like']['exists'];
+          bookmark = _board_data[0]['post_info']['keep']['exists'];
+          like = _board_data[0]['post_info']['like']['exists'];
         });
       } else if (response.statusCode == 401) {
         try {
@@ -108,20 +110,28 @@ class _board_viewerState extends State<board_viewer> {
   }
 
   Future<void> _update_like(bool exists) async {
-    var url = 'http://13.124.205.29/like/' +
-        widget.boardid.toString() +
-        '/?nx=55&nv=127';
+    final provider = Provider.of<MainProvider>(context, listen: false);
+    final main_Location = provider.location;
+    double? nx = double.tryParse(main_Location.latitude.toString());
+    double? ny = double.tryParse(main_Location.longitude.toString());
+    var queryParams = {
+      'nx': nx?.toStringAsFixed(0) ?? '0',
+      'ny': ny?.toStringAsFixed(0) ?? '0'
+    };
+    var queryString = Uri(queryParameters: queryParams).query;
+    var url = 'http://13.124.205.29/like/${widget.boardid}/?$queryString';
     var dio = Dio();
     String? access_token = await storage.read(key: 'jwt_accessToken');
     String? refresh_token = await storage.read(key: 'jwt_refreshToken');
-
+    print(url);
     try {
       var response = await dio.get(url,
           data: {'exists': exists},
           options: Options(headers: {'Authorization': 'Bearer $access_token'}));
+      print(response.statusCode);
       if (response.statusCode == 200) {
         setState(() {
-          like =exists;
+          like = exists;
         });
       } else if (response.statusCode == 401) {
         try {
@@ -133,7 +143,7 @@ class _board_viewerState extends State<board_viewer> {
             ),
           );
           setState(() {
-            like =exists;
+            like = exists;
           });
         } catch (e) {
           print('로그아웃 해');
@@ -168,20 +178,18 @@ class _board_viewerState extends State<board_viewer> {
   }
 
   Future<void> _update_bookmark(bool exists) async {
-    var url = 'http://13.124.205.29/keep/' +
-        widget.boardid.toString() +
-        '/';
+    var url = 'http://13.124.205.29/keep/' + widget.boardid.toString() + '/';
     var dio = Dio();
     String? access_token = await storage.read(key: 'jwt_accessToken');
     String? refresh_token = await storage.read(key: 'jwt_refreshToken');
 
     try {
       var response = await dio.get(url,
-          data: {'keep_ exists': exists},
+          data: {'keep_exists': exists},
           options: Options(headers: {'Authorization': 'Bearer $access_token'}));
       if (response.statusCode == 200) {
         setState(() {
-          bookmark =exists;
+          bookmark = exists;
         });
       } else if (response.statusCode == 401) {
         try {
@@ -212,8 +220,8 @@ class _board_viewerState extends State<board_viewer> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                              const Welcome_Screen()),
-                              (route) => false);
+                                  const Welcome_Screen()),
+                          (route) => false);
                     },
                   ),
                 ],
@@ -233,7 +241,7 @@ class _board_viewerState extends State<board_viewer> {
         ? Spalsh_Screen()
         : Scaffold(
             appBar: AppBar(
-              title: Text(_board_data[0]['post_body']['title']),
+              title: Text(_board_data[0]['post_info']['title']),
               leading: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
@@ -250,9 +258,9 @@ class _board_viewerState extends State<board_viewer> {
                     height: MediaQuery.of(context).size.height * 0.25,
                     width: MediaQuery.of(context).size.width,
                     child: _board_data.isNotEmpty &&
-                            _board_data[0]['post_image'].isNotEmpty
+                            _board_data[0]['post_info']['image'].isNotEmpty
                         ? Image.network(
-                            _board_data[0]['post_image'][0],
+                            _board_data[0]['post_info']['image'][0],
                             fit: BoxFit.cover,
                           )
                         : Container(
@@ -269,7 +277,7 @@ class _board_viewerState extends State<board_viewer> {
                     padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
                     child: Row(
                       children: [
-                        _board_data[0]['post_writer']['image'] != null
+                        _board_data[0]['post_info']['writer']['image'] != null
                             ? CircleAvatar(
                                 radius: 15,
                                 backgroundImage:
@@ -278,7 +286,7 @@ class _board_viewerState extends State<board_viewer> {
                             : CircleAvatar(
                                 radius: 15,
                                 backgroundImage: NetworkImage(
-                                    _board_data[0]['post_writer']['image']),
+                                    _board_data[0]['post_info']['writer']['image']),
                               ),
                         SizedBox(
                           width: 5,
@@ -292,7 +300,7 @@ class _board_viewerState extends State<board_viewer> {
                             );
                           },
                           child: Text(
-                            _board_data[0]['post_writer']['nickname'],
+                            _board_data[0]['post_info']['writer']['nickname'],
                             style: TextStyle(
                               fontSize: 15,
                             ),
@@ -345,7 +353,7 @@ class _board_viewerState extends State<board_viewer> {
                             spacing: 8.0,
                             runSpacing: 2.0,
                             children: _board_data.isNotEmpty
-                                ? _board_data[0]['post_tag'].map<Widget>((tag) {
+                                ? _board_data[0]['post_info']['tag'].map<Widget>((tag) {
                                     return Chip(
                                       labelPadding: EdgeInsets.all(2.0),
                                       label: Text(
@@ -380,69 +388,96 @@ class _board_viewerState extends State<board_viewer> {
                       style: TextStyle(fontSize: 17),
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(left: 8.0),
-                  //   child: ListView.builder(
-                  //     shrinkWrap: true,
-                  //     physics: NeverScrollableScrollPhysics(),
-                  //     itemCount: ingredients.length,
-                  //     itemBuilder: (context, index) {
-                  //       return Padding(
-                  //         padding: const EdgeInsets.only(bottom: 8.0),
-                  //         child: Column(
-                  //           crossAxisAlignment: CrossAxisAlignment.start,
-                  //           children: [
-                  //             Text(
-                  //               '- ${ingredients[index]}',
-                  //               style: TextStyle(fontSize: 16.0),
-                  //             ),
-                  //             Container(
-                  //               height: 1.0,
-                  //               width: double.infinity,
-                  //               color: Colors.grey[300],
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       );
-                  //     },
-                  //   ),
-                  // ),
-                  // Container(
-                  //   height: 5.0,
-                  //   width: double.infinity,
-                  //   color: kColor,
-                  // ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: Text('조주법',style: TextStyle(fontSize: 17)),
-                  // ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(left: 8.0),
-                  //   child: ListView.builder(
-                  //     shrinkWrap: true,
-                  //     physics: NeverScrollableScrollPhysics(),
-                  //     itemCount: instructions.length,
-                  //     itemBuilder: (context, index) {
-                  //       return Padding(
-                  //         padding: const EdgeInsets.only(bottom: 8.0),
-                  //         child: Column(
-                  //           crossAxisAlignment: CrossAxisAlignment.start,
-                  //           children: [
-                  //             Text(
-                  //               '- ${instructions[index]}',
-                  //               style: TextStyle(fontSize: 16.0),
-                  //             ),
-                  //             Container(
-                  //               height: 1.0,
-                  //               width: double.infinity,
-                  //               color: Colors.grey[300],
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       );
-                  //     },
-                  //   ),
-                  // ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: _board_data[0]['post_info']['ingredients'].length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '- ${_board_data[0]['post_info']['ingredients'][index]}',
+                                style: TextStyle(fontSize: 16.0),
+                              ),
+                              Container(
+                                height: 1.0,
+                                width: double.infinity,
+                                color: Colors.grey[300],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    height: 5.0,
+                    width: double.infinity,
+                    color: kColor,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('조주법',style: TextStyle(fontSize: 17)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Wrap(
+                          children: [
+                            Text(
+                              '- ${_board_data[0]['post_info']['body']}',
+                              style: TextStyle(fontSize: 16.0),
+                              maxLines: null,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ],
+                        ),
+                        Container(
+                          height: 1.0,
+                          width: double.infinity,
+                          color: Colors.grey[300],
+                        ),
+                      ],
+                    ),
+                    // child: ListView.builder(
+                    //   shrinkWrap: true,
+                    //   physics: NeverScrollableScrollPhysics(),
+                    //   itemCount: _board_data[0]['post_info']['body'].length,
+                    //   itemBuilder: (context, index) {
+                    //     final instruction = _board_data[0]['post_info']['body'][index];
+                    //     return Padding(
+                    //       padding: const EdgeInsets.only(bottom: 8.0),
+                    //       child: Column(
+                    //         crossAxisAlignment: CrossAxisAlignment.start,
+                    //         children: [
+                    //           Wrap(
+                    //             children: [
+                    //               Text(
+                    //                 '- $instruction',
+                    //                 style: TextStyle(fontSize: 16.0),
+                    //                 maxLines: null,
+                    //                 overflow: TextOverflow.visible,
+                    //               ),
+                    //             ],
+                    //           ),
+                    //           Container(
+                    //             height: 1.0,
+                    //             width: double.infinity,
+                    //             color: Colors.grey[300],
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
+                  ),
                 ],
               ),
             ),

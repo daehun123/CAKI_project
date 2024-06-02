@@ -4,18 +4,20 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../../BoardView/board_view_screen.dart';
-import '../../Welcome/welcome_screen.dart';
-import '../../splash_screen.dart';
+import '../BoardView/board_view_screen.dart';
+import '../Welcome/welcome_screen.dart';
+import '../splash_screen.dart';
 
-class BoardList_expert extends StatefulWidget {
-  const BoardList_expert({super.key});
+
+
+class BoardList_keep extends StatefulWidget {
+  const BoardList_keep({super.key});
 
   @override
-  State<BoardList_expert> createState() => _BoardListState();
+  State<BoardList_keep> createState() => _BoardListState();
 }
 
-class _BoardListState extends State<BoardList_expert> {
+class _BoardListState extends State<BoardList_keep> {
   List<dynamic> _board_data = [];
   static const storage = FlutterSecureStorage();
   bool isLoading = true;
@@ -32,7 +34,7 @@ class _BoardListState extends State<BoardList_expert> {
     });
   }
   _fetchBoard() async {
-    var url = 'http://13.124.205.29/main/expert/';
+    var url = 'http://13.124.205.29/keeppost/';
     var dio = Dio();
     String? access_token = await storage.read(key: 'jwt_accessToken');
     String? refresh_token = await storage.read(key: 'jwt_refreshToken');

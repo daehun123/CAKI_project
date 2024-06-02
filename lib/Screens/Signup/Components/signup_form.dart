@@ -36,10 +36,9 @@ class _SignupFormState extends State<SignupForm> {
         'email': email,
         'nickname': nickname,
         'password': password,
-        'image_path' : base64Encode(list),
       }),
     );
-
+    print(response.statusCode);
     if (response.statusCode == 200) {
       print('회원가입 성공');
       showDialog(
@@ -67,6 +66,23 @@ class _SignupFormState extends State<SignupForm> {
       );
     } else {
       print('회원가입 실패');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('회원가입 실패'),
+            content: Text('아이디,비밀번호를 확인해주세요.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('확인'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
