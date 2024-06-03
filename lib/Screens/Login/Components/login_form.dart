@@ -36,6 +36,7 @@ class _LoginFormState extends State<LoginForm> {
           },
         ),
       );
+      print(response.statusCode);
       if (response.statusCode == 200) {
         String _accesstoken = response.data['access_token'];
         String _refreshtoken = response.data['refresh_token'];
@@ -58,12 +59,7 @@ class _LoginFormState extends State<LoginForm> {
                   child: Text('확인'),
                   onPressed: () {
                     Navigator.of(context).pop();
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                            const Welcome_Screen()),
-                            (route) => false);
+
                   },
                 ),
               ],
@@ -73,6 +69,7 @@ class _LoginFormState extends State<LoginForm> {
       }
     } catch (e) {
       print("로그인 에러");
+      print(e);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -84,12 +81,7 @@ class _LoginFormState extends State<LoginForm> {
                 child: Text('확인'),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                          const Welcome_Screen()),
-                          (route) => false);
+
                 },
               ),
             ],

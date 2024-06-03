@@ -4,6 +4,7 @@ import 'package:caki_project/Components/constants.dart';
 import 'package:caki_project/Components/location.dart';
 import 'package:caki_project/Components/mainprovider.dart';
 import 'package:caki_project/Screens/person/Personscreen.dart';
+import 'package:caki_project/Screens/person/another_profil.dart';
 import 'package:caki_project/Screens/splash_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -76,6 +77,8 @@ class _board_viewerState extends State<board_viewer> {
           );
           setState(() {
             _board_data = [response.data];
+            bookmark = _board_data[0]['post_info']['keep']['exists'];
+            like = _board_data[0]['post_info']['like']['exists'];
           });
         } catch (e) {
           print('로그아웃 해');
@@ -296,7 +299,7 @@ class _board_viewerState extends State<board_viewer> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PersonScreen()),
+                                  builder: (context) => Another_Profil(user_name: _board_data[0]['post_info']['writer']['nickname'],)),
                             );
                           },
                           child: Text(

@@ -15,7 +15,6 @@ class Profil_body extends StatefulWidget {
 
 class _Profil_bodyState extends State<Profil_body> {
   Map<String, dynamic> _profil_data = {};
-  String? accessToken;
   var count;
 
   @override
@@ -25,20 +24,7 @@ class _Profil_bodyState extends State<Profil_body> {
   }
 
   _fetchProfil() async {
-    // final response = await http.get(Uri.parse('http://13.124.205.29/'));
-    // if (response.statusCode == 200) {
-    //   setState(() {
-    //     _profil_data = json.decode(response.body);
-    //   });
-    // } else {
-    //   throw Exception('Fail');
-    // }
-    _profil_data = {
-      "nickname": "대훈",
-      "introduce": "소프트웨어학과 파이팅",
-      "image_path": "https://via.placeholder.com/150",
-      "posts": Null
-    };
+    var url = '';
   }
 
   @override
@@ -52,12 +38,13 @@ class _Profil_bodyState extends State<Profil_body> {
               children: [
                 CircleAvatar(
                   radius: 50,
-                  backgroundImage: NetworkImage(_profil_data['image_path']),
+                  //backgroundImage: NetworkImage(_profil_data['image_path']),
                 ),
                 Column(
                   children: [
                     Text(
-                      _profil_data['nickname'],
+                      //_profil_data['nickname'],
+                      'ssdad',
                       style: TextStyle(
                         fontSize: 24,
                       ),
@@ -65,7 +52,8 @@ class _Profil_bodyState extends State<Profil_body> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: Text(
-                        _profil_data['introduce'],
+                        //_profil_data['introduce'],
+                        'sdd',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
