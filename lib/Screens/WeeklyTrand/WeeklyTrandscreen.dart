@@ -1,16 +1,12 @@
-import 'package:dio/dio.dart';
+import 'package:caki_project/Components/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import '../../Components/mainprovider.dart';
 import '../Main_veiw/Bottom_main.dart';
 import '../Main_veiw/Components/MP_WeeklyTrand.dart';
-import '../Welcome/welcome_screen.dart';
-import 'DateRecommend.dart';
-import 'IngredientRecommend.dart';
-import 'StarRecommend.dart';
-import 'WeatherRecommend.dart';
+import 'Recommend_list.dart';
+
 
 class WeeklyTrandScreen extends StatefulWidget {
   const WeeklyTrandScreen({super.key});
@@ -21,7 +17,8 @@ class WeeklyTrandScreen extends StatefulWidget {
 
 class _WeeklyTrandScreenState extends State<WeeklyTrandScreen> {
 
-  static const storage = FlutterSecureStorage();
+  double? send_nx;
+  double? send_ny;
 
 
   void initState(){
@@ -30,77 +27,23 @@ class _WeeklyTrandScreenState extends State<WeeklyTrandScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    shareLocation();
+    getLocation();
   }
-  Future<void> shareLocation() async {
+  Future<void> getLocation() async {
     final provider = Provider.of<MainProvider>(context,listen: false);
 
     final main_Location = provider.location;
-    double? nx = double.tryParse(main_Location.latitude.toString());
-    double? ny = double.tryParse(main_Location.longitude.toString());
-    var queryParams = {
-      'nx': nx?.toStringAsFixed(0) ?? '0',
-      'ny': ny?.toStringAsFixed(0) ?? '0'
-    };
-    var queryString = Uri(queryParameters: queryParams).query;
-    var url = 'http://13.124.205.29/main?$queryString';
-    var dio = Dio();
-    String? access_token = await storage.read(key: 'jwt_accessToken');
-    String? refresh_token = await storage.read(key: 'jwt_refreshToken');
-
-    try {
-      var response = await dio.get(
-        url,
-        options: Options(
-          headers: {'Authorization': 'Bearer $access_token'},
-        ),
-      );
-      if (response.statusCode == 200) {
-        print(queryString);
-      } else if (response.statusCode == 401) {
-        try {
-          response = await dio.get(
-            url,
-            options: Options(
-              headers: {'Authorization': 'Bearer $refresh_token'},
-            ),
-          );
-        } catch (e) {
-          print('로그아웃 해');
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('토큰 만료'),
-                content: Text('다시 로그인 해주세요.'),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text('확인'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                              const Welcome_Screen()),
-                              (route) => false);
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-        }
-      }
-    } catch (e) {
-      print('error');
-    }
+    double? nx = double.tryParse(main_Location.latitude.toString()) ?? 0;
+    double? ny = double.tryParse(main_Location.longitude.toString()) ?? 0;
+    send_nx = nx;
+    send_ny = ny;
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('위클리 트렌드 모두보기'),
+        backgroundColor: kColor,
       ),
       body: ListView.builder(
         itemCount: imgList.length,
@@ -112,25 +55,25 @@ class _WeeklyTrandScreenState extends State<WeeklyTrandScreen> {
                 case 0:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => DateScreen()),
+                    MaterialPageRoute(builder: (context) => Trend_list(nx: send_nx!, ny: send_ny!, recommend: 'post_by_like',)),
                   );
                   break;
                 case 1:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => StarScreen()),
+                    MaterialPageRoute(builder: (context) => Trend_list(nx: send_nx!, ny: send_ny!, recommend: 'post_by_like',)),
                   );
                   break;
                 case 2:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => WeatherScreen()),
+                    MaterialPageRoute(builder: (context) => Trend_list(nx: send_nx!, ny: send_ny!, recommend: 'post_by_weather',)),
                   );
                   break;
                 case 3:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => IngredientScreen()),
+                    MaterialPageRoute(builder: (context) => Trend_list(nx: send_nx!, ny: send_ny!, recommend: 'post_by_ranking',)),
                   );
                   break;
                 default:

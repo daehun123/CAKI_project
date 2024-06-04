@@ -1,12 +1,13 @@
-import 'package:caki_project/Screens/WeeklyTrand/DateRecommend.dart';
-import 'package:caki_project/Screens/WeeklyTrand/IngredientRecommend.dart';
-import 'package:caki_project/Screens/WeeklyTrand/StarRecommend.dart';
-import 'package:caki_project/Screens/WeeklyTrand/WeatherRecommend.dart';
+import 'package:caki_project/Screens/WeeklyTrand/Recommend_list.dart';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 
+import '../../../Components/mainprovider.dart';
 import 'MP_WeeklyAddBT.dart';
 
 //이미지 리스트
@@ -68,6 +69,27 @@ class WeeklyTrand extends StatefulWidget {
 class _WeeklyTrandState extends State<WeeklyTrand> {
   int _current = 0;
   final CarouselController _controller = CarouselController();
+  double? send_nx;
+  double? send_ny;
+
+
+  void initState(){
+    super.initState();
+  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getLocation();
+  }
+  Future<void> getLocation() async {
+    final provider = Provider.of<MainProvider>(context,listen: false);
+
+    final main_Location = provider.location;
+    double? nx = double.tryParse(main_Location.latitude.toString()) ?? 0;
+    double? ny = double.tryParse(main_Location.longitude.toString()) ?? 0;
+    send_nx = nx;
+    send_ny = ny;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,27 +102,27 @@ class _WeeklyTrandState extends State<WeeklyTrand> {
                 case 0:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => DateScreen()),
+                    MaterialPageRoute(builder: (context) => Trend_list(nx: send_nx!, ny: send_ny!, recommend: 'post_by_like',)),
                   );
                   break;
                 case 1:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => StarScreen()),
+                    MaterialPageRoute(builder: (context) => Trend_list(nx: send_nx!, ny: send_ny!, recommend: 'post_by_like')),
                   );
                   break;
                 case 2:
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => WeatherScreen()),
+                        builder: (context) => Trend_list(nx: send_nx!, ny: send_ny!, recommend: 'post_by_weather')),
                   );
                   break;
                 case 3:
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => IngredientScreen()),
+                        builder: (context) => Trend_list(nx: send_nx!, ny: send_ny!, recommend: 'post_by_ranking')),
                   );
                   break;
                 default:
