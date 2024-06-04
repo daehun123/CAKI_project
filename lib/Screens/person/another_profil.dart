@@ -1,5 +1,6 @@
 import 'package:caki_project/Screens/splash_screen.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
@@ -131,31 +132,47 @@ class _Another_ProfilState extends State<Another_Profil> {
                                 backgroundImage:
                                     AssetImage('assets/Img/userprofil.jpg'),
                               ),
-                        Column(
-                          children: [
-                            Text(
-                              _profil_data[0]['profile_info']['nickname'],
-                              style: TextStyle(
-                                fontSize: 24,
-                              ),
-                            ),
-                            _profil_data[0]['profile_info']['introduce'] != null
-                                ? Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 40),
-                                    child: Text(
-                                      _profil_data[0]['profile_info']
-                                          ['introduce'],
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                      ),
+                        SizedBox(width: 20,),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    _profil_data[0]['profile_info']['nickname'],
+                                    style: TextStyle(
+                                      fontSize: 24,
                                     ),
-                                  )
-                                : Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 40)),
-                          ],
+                                  ),
+                                  _profil_data[0]['profile_info']['qual'] != null ?
+                                  const Padding(padding: EdgeInsets.only(left : 10), child: Icon(
+                                    Icons.verified,
+                                    color: Colors.lightBlue,
+                                    size: 18,
+                                  ),) : Container(),
+                                ],
+                              ),
+
+                              _profil_data[0]['profile_info']['introduce'] != null
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 40),
+                                      child: Text(
+                                        _profil_data[0]['profile_info']
+                                            ['introduce'],
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 40)),
+                            ],
+                          ),
                         ),
                       ],
                     ),

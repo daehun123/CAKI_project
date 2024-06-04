@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import '../../person/Personscreen.dart';
 
 
-class MainpagePersonbt extends StatelessWidget {
+class MainpagePersonbt extends StatefulWidget {
   const MainpagePersonbt({super.key});
 
+  @override
+  State<MainpagePersonbt> createState() => _MainpagePersonbtState();
+}
+
+class _MainpagePersonbtState extends State<MainpagePersonbt> {
   @override
   Widget build(BuildContext context) {
     return IconButton(

@@ -4,9 +4,14 @@ import 'package:getwidget/getwidget.dart';
 
 import '../Main_veiw/Bottom_main.dart';
 
-class DateScreen extends StatelessWidget {
+class DateScreen extends StatefulWidget {
   const DateScreen({Key? key});
 
+  @override
+  State<DateScreen> createState() => _DateScreenState();
+}
+
+class _DateScreenState extends State<DateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
