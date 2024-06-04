@@ -1,6 +1,5 @@
 import 'package:caki_project/Screens/Main_veiw/main_screen.dart';
 import 'package:caki_project/Screens/Preference/preference_screen.dart';
-import 'package:caki_project/Screens/Welcome/welcome_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
