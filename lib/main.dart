@@ -4,15 +4,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/date_symbol_data_local.dart';
 import 'Components/mainprovider.dart';
 import 'Screens/Welcome/welcome_screen.dart';
 import 'Screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  runApp(
-      ChangeNotifierProvider(create: (_) => MainProvider(),child : const MyApp())
-  );
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting();
+  runApp(ChangeNotifierProvider(create: (_) => MainProvider(),child : const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
