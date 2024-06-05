@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:intl/date_symbol_data_file.dart';
+import 'package:intl/intl.dart';
 import '../BoardView/board_view_screen.dart';
 import '../Main_veiw/Bottom_main.dart';
 import '../Welcome/welcome_screen.dart';
@@ -23,31 +25,50 @@ class _Trend_listState extends State<Trend_list> {
   static const storage = FlutterSecureStorage();
   List<dynamic> _list = [];
   String title = '';
-
+  String weather = '';
+  String week = '';
   bool isLoading = true;
+
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+    // initializeDateFormatting(Localizations.localeOf(context).languageCode);
+  // }
+
   @override
   void initState() {
     super.initState();
     _loadDate();
-    _setTitle();
+    _getWeekday();
+  }
+
+
+  void _getWeekday() {
+    var string = DateFormat('E', 'ko_KR').format(DateTime.now()).toString();
+    print("date : " + string);
+
+    String weekday = "";
+    setState(() {
+      week = weekday;
+    });
   }
 
   void _setTitle() {
     switch (widget.recommend) {
       case 'post_by_like':
-        title = '좋아요순 추천';
+        title = '좋아요순 추천!';
         break;
-      case 'post_by_like':
-        title = '요일별 추천';
+      case 'post_by_day':
+        title = '$week요일의 추천!';
         break;
       case 'post_by_weather':
-        title = '날씨별 추천';
+        title = '$weather 날씨 추천!';
         break;
       case 'post_by_ranking':
         title = '취향별 추천';
         break;
       default:
-        title = '오늘의 추천';
+        title = '오늘의 추천!';
     }
   }
 
@@ -55,6 +76,7 @@ class _Trend_listState extends State<Trend_list> {
     await shareLocation();
     setState(() {
       isLoading = false;
+      _setTitle();
     });
   }
 
@@ -79,8 +101,11 @@ class _Trend_listState extends State<Trend_list> {
         ),
       );
       if (response.statusCode == 200) {
-        _list = [response.data];
-        print(_list);
+        setState(() {
+          _list = [response.data];
+          weather = _list[0]['weather'];
+        });
+
       } else if (response.statusCode == 401) {
         try {
           response = await dio.get(
@@ -91,7 +116,8 @@ class _Trend_listState extends State<Trend_list> {
           );
           if(response.statusCode == 200){
             _list = [response.data];
-            print(_list);
+            weather = _list[0]['weekly_trends']['weather']  ;
+            print(weather);
           }
         } catch (e) {
           print('로그아웃 해');
