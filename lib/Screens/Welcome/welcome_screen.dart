@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../Components/background.dart';
+import '../Login/Components/social_login.dart';
 import 'Components/loginandsignup_btn.dart';
 import 'Components/welcome_image.dart';
 
@@ -25,7 +26,15 @@ class Welcome_Screen extends StatelessWidget {
                   ),
                   Spacer(),
                 ],
-              )
+              ),
+              SizedBox(height: 16,),
+              Row(
+                children: [
+                  Spacer(),
+                  Naver_Login_btn(),
+                  Spacer()
+                ],
+              ),
             ],
           ),
         ),

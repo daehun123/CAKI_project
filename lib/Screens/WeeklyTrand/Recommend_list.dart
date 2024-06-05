@@ -11,7 +11,8 @@ import '../Main_veiw/Bottom_main.dart';
 import '../Welcome/welcome_screen.dart';
 
 class Trend_list extends StatefulWidget {
-  const Trend_list({super.key, required this.nx, required this.ny, required this.recommend});
+  const Trend_list(
+      {super.key, required this.nx, required this.ny, required this.recommend});
 
   final double nx;
   final double ny;
@@ -26,13 +27,13 @@ class _Trend_listState extends State<Trend_list> {
   List<dynamic> _list = [];
   String title = '';
   String weather = '';
-  String week = '';
+  var week;
   bool isLoading = true;
 
   // @override
   // void didChangeDependencies() {
   //   super.didChangeDependencies();
-    // initializeDateFormatting(Localizations.localeOf(context).languageCode);
+  // initializeDateFormatting(Localizations.localeOf(context).languageCode);
   // }
 
   @override
@@ -42,15 +43,9 @@ class _Trend_listState extends State<Trend_list> {
     _getWeekday();
   }
 
-
   void _getWeekday() {
     var string = DateFormat('E', 'ko_KR').format(DateTime.now()).toString();
-    print("date : " + string);
-
-    String weekday = "";
-    setState(() {
-      week = weekday;
-    });
+    week = string;
   }
 
   void _setTitle() {
@@ -72,7 +67,7 @@ class _Trend_listState extends State<Trend_list> {
     }
   }
 
-  Future<void> _loadDate() async{
+  Future<void> _loadDate() async {
     await shareLocation();
     setState(() {
       isLoading = false;
@@ -81,8 +76,6 @@ class _Trend_listState extends State<Trend_list> {
   }
 
   Future<void> shareLocation() async {
-
-
     var queryParams = {
       'nx': widget.nx.toStringAsFixed(0),
       'ny': widget.ny.toStringAsFixed(0)
@@ -105,7 +98,6 @@ class _Trend_listState extends State<Trend_list> {
           _list = [response.data];
           weather = _list[0]['weather'];
         });
-
       } else if (response.statusCode == 401) {
         try {
           response = await dio.get(
@@ -114,9 +106,9 @@ class _Trend_listState extends State<Trend_list> {
               headers: {'Authorization': 'Bearer $refresh_token'},
             ),
           );
-          if(response.statusCode == 200){
+          if (response.statusCode == 200) {
             _list = [response.data];
-            weather = _list[0]['weekly_trends']['weather']  ;
+            weather = _list[0]['weekly_trends']['weather'];
             print(weather);
           }
         } catch (e) {
@@ -136,8 +128,8 @@ class _Trend_listState extends State<Trend_list> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                              const Welcome_Screen()),
-                              (route) => false);
+                                  const Welcome_Screen()),
+                          (route) => false);
                     },
                   ),
                 ],
@@ -150,119 +142,127 @@ class _Trend_listState extends State<Trend_list> {
       print('error');
     }
   }
-    @override
-    Widget build(BuildContext context) {
-      return isLoading ? Spalsh_Screen() : Scaffold(
-        appBar: AppBar(
-          title: Text(title,),
-          backgroundColor: kColor,
-        ),
-        body: SizedBox(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height * (4 / 5),
-          child: ListView.builder(
-            itemCount: _list[0]['weekly_trends'][widget.recommend].length,
-            itemBuilder: (BuildContext context, int index) {
-              var item = _list[0]['weekly_trends'][widget.recommend][index];
-              return Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  board_viewer(boardid: item['post_id'])));
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      foregroundColor: Colors.black,
-                      maximumSize: const Size(double.infinity, 100),
-                      minimumSize: const Size(double.infinity, 100),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            item['post_image'][0],
-                            fit: BoxFit.cover,
-                            width: 100,
-                            height: 100,
-                          ),
+
+  @override
+  Widget build(BuildContext context) {
+    return isLoading
+        ? Spalsh_Screen()
+        : Scaffold(
+            appBar: AppBar(
+              title: Text(
+                title,
+              ),
+              backgroundColor: kColor,
+            ),
+            body: SizedBox(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height * (4 / 5),
+              child: ListView.builder(
+                itemCount: _list[0]['weekly_trends'][widget.recommend].length,
+                itemBuilder: (BuildContext context, int index) {
+                  var item = _list[0]['weekly_trends'][widget.recommend][index];
+                  return Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      board_viewer(boardid: item['post_id'])));
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: Colors.black,
+                          maximumSize: const Size(double.infinity, 100),
+                          minimumSize: const Size(double.infinity, 100),
                         ),
-                        // const Spacer(
-                        //   flex: 1,
-                        // ),
-                        SizedBox(
-                          width: 50,
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  // SizedBox(
-                                  //   width: 130,
-                                  // ),
-                                  Text(item['writer_nickname']),
-                                ],
+                        child: Row(
+                          children: <Widget>[
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                item['post_image'][0],
+                                fit: BoxFit.cover,
+                                width: 100,
+                                height: 100,
                               ),
-                              const Spacer(
-                                flex: 1,
-                              ),
-                              Text(
-                                item['post_title'],
-                                style: const TextStyle(fontSize: 22),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const Spacer(
-                                flex: 1,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            ),
+                            // const Spacer(
+                            //   flex: 1,
+                            // ),
+                            SizedBox(
+                              width: 50,
+                            ),
+                            Expanded(
+                              child: Column(
                                 children: [
                                   Row(
                                     children: [
-                                      if (item['post_tag'].isNotEmpty)
-                                        for (int i = item['post_tag'].length - 2;
-                                        i < item['post_tag'].length;
-                                        i++)
-                                          i < item['post_tag'].length - 1
-                                              ? Text(
-                                              '#' + item['post_tag'][i] + ' ')
-                                              : Text('#' + item['post_tag'][i]),
+                                      // SizedBox(
+                                      //   width: 130,
+                                      // ),
+                                      Text(item['writer_nickname']),
                                     ],
                                   ),
-                                  // const SizedBox(
-                                  //   width: 40,
-                                  // ),
+                                  const Spacer(
+                                    flex: 1,
+                                  ),
+                                  Text(
+                                    item['post_title'],
+                                    style: const TextStyle(fontSize: 22),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const Spacer(
+                                    flex: 1,
+                                  ),
                                   Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      const Icon(
-                                        Icons.favorite,
-                                        color: Colors.red,
-                                        size: 20,
+                                      Row(
+                                        children: [
+                                          if (item['post_tag'].isNotEmpty)
+                                            for (int i =
+                                                    item['post_tag'].length - 2;
+                                                i < item['post_tag'].length;
+                                                i++)
+                                              i < item['post_tag'].length - 1
+                                                  ? Text('#' +
+                                                      item['post_tag'][i] +
+                                                      ' ')
+                                                  : Text('#' +
+                                                      item['post_tag'][i]),
+                                        ],
                                       ),
-                                      Text(item['post_like'].toString()),
+                                      // const SizedBox(
+                                      //   width: 40,
+                                      // ),
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.favorite,
+                                            color: Colors.red,
+                                            size: 20,
+                                          ),
+                                          Text(item['post_like'].toString()),
+                                        ],
+                                      )
                                     ],
-                                  )
+                                  ),
                                 ],
                               ),
-                            ],
-                          ),
-                        ),
-                        // const Spacer(
-                        //   flex: 1,
-                        // ),
-                      ],
-                    )),
-              );
-            },
-          ),
-        ),
-        bottomNavigationBar: Bottom(),
-      );
-    }
-
+                            ),
+                            // const Spacer(
+                            //   flex: 1,
+                            // ),
+                          ],
+                        )),
+                  );
+                },
+              ),
+            ),
+            bottomNavigationBar: Bottom(),
+          );
+  }
 }
