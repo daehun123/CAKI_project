@@ -6,8 +6,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Main_veiw/Bottom_main.dart';
 
-class PersonScreen extends StatelessWidget {
+class PersonScreen extends StatefulWidget {
   const PersonScreen({super.key});
+
+  @override
+  State<PersonScreen> createState() => _PersonScreenState();
+}
+
+class _PersonScreenState extends State<PersonScreen> {
 
   @override
   Widget build(BuildContext context) {

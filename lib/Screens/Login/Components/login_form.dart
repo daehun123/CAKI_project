@@ -18,6 +18,8 @@ class _LoginFormState extends State<LoginForm> {
   String? email, password;
   static const storage = FlutterSecureStorage();
 
+
+
   Future<void> login(String email, String password) async {
     var url = 'http://13.124.205.29/authuser/';
     var dio = Dio();
@@ -39,10 +41,11 @@ class _LoginFormState extends State<LoginForm> {
       if (response.statusCode == 200) {
         String _accesstoken = response.data['access_token'];
         String _refreshtoken = response.data['refresh_token'];
-        print('token : $_accesstoken');
-        print('token : $_refreshtoken');
+        String nickname =  response.data['user_info']['nickname'];
+
         await storage.write(key: 'jwt_accessToken', value: _accesstoken);
         await storage.write(key: 'jwt_refreshToken', value: _refreshtoken);
+        await storage.write(key: 'nickname', value: nickname);
         _ckFirstLogin();
 
       }else{
@@ -106,6 +109,8 @@ class _LoginFormState extends State<LoginForm> {
           (route) => false);
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {

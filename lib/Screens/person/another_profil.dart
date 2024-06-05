@@ -132,7 +132,9 @@ class _Another_ProfilState extends State<Another_Profil> {
                                 backgroundImage:
                                     AssetImage('assets/Img/userprofil.jpg'),
                               ),
-                        SizedBox(width: 20,),
+                        SizedBox(
+                          width: 20,
+                        ),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,16 +148,20 @@ class _Another_ProfilState extends State<Another_Profil> {
                                       fontSize: 24,
                                     ),
                                   ),
-                                  _profil_data[0]['profile_info']['qual'] != null ?
-                                  const Padding(padding: EdgeInsets.only(left : 10), child: Icon(
-                                    Icons.verified,
-                                    color: Colors.lightBlue,
-                                    size: 18,
-                                  ),) : Container(),
+                                  _profil_data[0]['profile_info']['qual'] != 0
+                                      ? const Padding(
+                                          padding: EdgeInsets.only(left: 10),
+                                          child: Icon(
+                                            Icons.verified,
+                                            color: Colors.lightBlue,
+                                            size: 18,
+                                          ),
+                                        )
+                                      : Container(),
                                 ],
                               ),
-
-                              _profil_data[0]['profile_info']['introduce'] != null
+                              _profil_data[0]['profile_info']['introduce'] !=
+                                      null
                                   ? Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 40),

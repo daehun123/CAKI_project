@@ -1,3 +1,4 @@
+import 'package:caki_project/Screens/Login/Components/social_login.dart';
 import 'package:flutter/material.dart';
 
 import '../../Login/login_screen.dart';
@@ -40,7 +41,8 @@ class LoginAndSignupBtn extends StatelessWidget {
           child: Text(
             'Sign Up'.toUpperCase(),
           ),
-        )
+        ),
+
       ],
     );
   }

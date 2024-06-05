@@ -23,7 +23,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static const storage = FlutterSecureStorage();
-  String _wather = '';
+  String _weather = '';
   void initState(){
     super.initState();
   }
@@ -57,7 +57,8 @@ class _MyHomePageState extends State<MyHomePage> {
       );
       if (response.statusCode == 200) {
         setState(() {
-          //_wather = response.data['weather'];
+          var _list = [response.data];
+          _weather = _list[0]['weather'];
         });
       } else if (response.statusCode == 401) {
         try {
@@ -67,6 +68,12 @@ class _MyHomePageState extends State<MyHomePage> {
               headers: {'Authorization': 'Bearer $refresh_token'},
             ),
           );
+          if (response.statusCode == 200) {
+            setState(() {
+              var _list = [response.data];
+              _weather = _list[0]['weather'];
+            });
+          }
         } catch (e) {
           print('로그아웃 해');
           showDialog(
@@ -106,35 +113,38 @@ class _MyHomePageState extends State<MyHomePage> {
     final WTWidth = (screenWidth - 20);
     final katWidth = WTWidth / 5; // 총 가로 길이에서 간격을 뺀 후, 5개의 위젯으로 나눕니다.
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(120.0),
-        child: Apptop(context),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Expanded(
-            child: WeeklyTrand(),
-          ),
-          Expanded(
-            child: Container(
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CatClassic(width: katWidth),
-                  CatExpert(width: katWidth),
-                  CatSimple(width: katWidth),
-                  CatCheaper(width: katWidth),
-                ],
+    return WillPopScope(
+      onWillPop: () { return Future(() => false); },
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(120.0),
+          child: Apptop(context,_weather),
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Expanded(
+              child: WeeklyTrand(),
+            ),
+            Expanded(
+              child: Container(
+                alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CatClassic(width: katWidth),
+                    CatExpert(width: katWidth),
+                    CatSimple(width: katWidth),
+                    CatCheaper(width: katWidth),
+                  ],
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 10),
-        ],
+            SizedBox(height: 10),
+          ],
+        ),
+        bottomNavigationBar: Bottom(),
       ),
-      bottomNavigationBar: Bottom(),
     );
   }
 }
