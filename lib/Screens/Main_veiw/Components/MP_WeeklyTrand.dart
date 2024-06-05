@@ -102,7 +102,7 @@ class _WeeklyTrandState extends State<WeeklyTrand> {
                 case 0:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Trend_list(nx: send_nx!, ny: send_ny!, recommend: 'post_by_like',)),
+                    MaterialPageRoute(builder: (context) => Trend_list(nx: send_nx!, ny: send_ny!, recommend: 'post_by_day',)),
                   );
                   break;
                 case 1:
