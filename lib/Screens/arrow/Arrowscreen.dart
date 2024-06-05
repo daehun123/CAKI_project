@@ -6,7 +6,6 @@ import '../../Components/constants.dart';
 import '../Main_veiw/Bottom_main.dart';
 import '../Main_veiw/main_screen.dart';
 import 'dart:io';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 
@@ -190,7 +189,6 @@ class _ArrowScreenState extends State<ArrowScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final myController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         title: Text('업 로 드'),
