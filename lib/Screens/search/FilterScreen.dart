@@ -1,8 +1,8 @@
-import 'package:caki_project/Screens/search/Search_Resultscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 import '../../Components/constants.dart';
+import 'FilterScreenResult.dart';
 
 class FilterScreen extends StatefulWidget {
   FilterScreen({Key? key}) : super(key: key);
@@ -17,10 +17,7 @@ class _FilterScreenState extends State<FilterScreen> {
   late GroupButtonController _otherController;
   late GroupButtonController _expertController;
 
-  List<String> expertGroup = [
-    '인증 ◯',
-    '인증 ☓'
-  ];
+  List<String> expertGroup = ['인증 ◯', '인증 ☓'];
 
   List<String> alcoholGroup = [
     '보드카',
@@ -30,15 +27,18 @@ class _FilterScreenState extends State<FilterScreen> {
     '리큐르',
     '진',
     '데킬라',
+    '소주',
+    '맥주',
+    '막걸리'
   ];
 
   List<String> tasteGroup = [
-    '도수★★★',
-    '당도★★★',
-    '도수★★',
-    '당도★★',
-    '도수★',
-    '당도★',
+    '도수3',
+    '당도3',
+    '도수2',
+    '당도2',
+    '도수1',
+    '당도1',
   ];
 
   List<String> otherGroup = [
@@ -105,7 +105,8 @@ class _FilterScreenState extends State<FilterScreen> {
                           buttonWidth: MediaQuery.of(context).size.width / 2.4,
                         ),
                         isRadio: false,
-                        controller: _expertController, // 술 종류 그룹에 대한 Controller
+                        controller: _expertController,
+                        // 술 종류 그룹에 대한 Controller
                         onSelected: (val, i, selected) {
                           // 선택 상태 변경 시 동작
                           setState(() {
@@ -145,7 +146,8 @@ class _FilterScreenState extends State<FilterScreen> {
                           buttonWidth: MediaQuery.of(context).size.width / 2.4,
                         ),
                         isRadio: false,
-                        controller: _alcoholController, // 술 종류 그룹에 대한 Controller
+                        controller: _alcoholController,
+                        // 술 종류 그룹에 대한 Controller
                         onSelected: (val, i, selected) {
                           // 선택 상태 변경 시 동작
                           setState(() {
@@ -185,7 +187,8 @@ class _FilterScreenState extends State<FilterScreen> {
                           buttonWidth: MediaQuery.of(context).size.width / 2.4,
                         ),
                         isRadio: false,
-                        controller: _tasteController, // 도수 & 당도 그룹에 대한 Controller
+                        controller: _tasteController,
+                        // 도수 & 당도 그룹에 대한 Controller
                         onSelected: (val, i, selected) {
                           // 선택 상태 변경 시 동작
                           setState(() {
@@ -225,7 +228,8 @@ class _FilterScreenState extends State<FilterScreen> {
                           buttonWidth: MediaQuery.of(context).size.width / 2.4,
                         ),
                         isRadio: false,
-                        controller: _otherController, // 기타음료 그룹에 대한 Controller
+                        controller: _otherController,
+                        // 기타음료 그룹에 대한 Controller
                         onSelected: (val, i, selected) {
                           // 선택 상태 변경 시 동작
                           setState(() {
@@ -259,12 +263,22 @@ class _FilterScreenState extends State<FilterScreen> {
               minimumSize: const Size(200, 56),
             ),
             onPressed: () {
-              debugPrint('$choiceExpert, $choicealcohol, $choicetaste, $choiceother');
+              // 선택된 항목들을 하나의 리스트로 합침
+              List<String> selectedKeywords = [];
+              selectedKeywords.addAll(choiceExpert);
+              selectedKeywords.addAll(choicealcohol);
+              selectedKeywords.addAll(choicetaste);
+              selectedKeywords.addAll(choiceother);
+
+              // 선택된 항목들을 출력하여 확인
+              debugPrint('Selected Keywords: $selectedKeywords');
+
+              // ResultScreen으로 선택된 항목 리스트를 전달
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) {
-                    return const ResultScreen();
+                    return FilterResultScreen(selectedKeywords: selectedKeywords);
                   },
                 ),
               );

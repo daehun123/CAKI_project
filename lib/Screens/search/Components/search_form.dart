@@ -3,18 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
-import 'package:getwidget/components/search_bar/gf_search_bar.dart';
-
-List list = [
-  "item1",
-  "item2",
-  "item3",
-  "didi",
-  "koko",
-  "caki",
-  "dodo",
-  "hoho"
-];
 
 class SearchForm extends StatefulWidget {
   SearchForm({Key? key}) : super(key: key);
@@ -25,33 +13,57 @@ class SearchForm extends StatefulWidget {
 class _SearchFormState extends State<SearchForm> {
   String? selectedItem;
 
+  TextEditingController _searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return GFSearchBar(
-      searchList: list,
-      searchQueryBuilder: (query, list) => list.where((item) {
-        return item!.toString().toLowerCase().contains(query.toLowerCase());
-      }).toList(),
-      overlaySearchListItemBuilder: (dynamic item) => Container(
-        padding: const EdgeInsets.all(10),
-        child: Text(
-          item,
-          style: const TextStyle(fontSize: 18),
-        ),
-      ),
-      overlaySearchListHeight: 300,
-      onItemSelected: (dynamic item) {
-        setState(() {
-          selectedItem = item;
-          print('$item');
-        });
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ResultScreen(selectedItem: item),
+    return Row(
+      children: [
+        Expanded(
+          child: TextFormField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              hintText: 'Search...',
+            ),
+            onChanged: (value) {
+              setState(() {
+                selectedItem = value;
+              });
+            },
           ),
-        );
-      },// 원하는 아이콘으로 변경 가능
+        ),
+        IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () {
+            if (selectedItem == null || selectedItem!.isEmpty) {
+              // 검색어가 비어 있을 때 사용자에게 알림 표시
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('주의', style: TextStyle(color: Colors.red)),
+                  content: Text('검색어를 입력하세요.',style: TextStyle(color: Colors.red)),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('확인'),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              // 검색어가 있는 경우에만 결과 화면으로 이동
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ResultScreen(selectedItem: selectedItem),
+                ),
+              );
+            }
+          },
+        ),
+      ],
     );
   }
 }
