@@ -10,32 +10,35 @@ class Welcome_Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Background(
-      child: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Welcome_Image(),
-              Row(
-                children: [
-                  Spacer(),
-                  Expanded(
-                    flex: 8,
-                    child: LoginAndSignupBtn(),
-                  ),
-                  Spacer(),
-                ],
-              ),
-              SizedBox(height: 16,),
-              Row(
-                children: [
-                  Spacer(),
-                  Naver_Login_btn(),
-                  Spacer()
-                ],
-              ),
-            ],
+    return WillPopScope(
+      onWillPop: () { return Future(() => false); },
+      child: const Background(
+        child: SingleChildScrollView(
+          child: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Welcome_Image(),
+                Row(
+                  children: [
+                    Spacer(),
+                    Expanded(
+                      flex: 8,
+                      child: LoginAndSignupBtn(),
+                    ),
+                    Spacer(),
+                  ],
+                ),
+                SizedBox(height: 16,),
+                Row(
+                  children: [
+                    Spacer(),
+                    Naver_Login_btn(),
+                    Spacer()
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

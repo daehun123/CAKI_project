@@ -38,6 +38,7 @@ class _Profil_bodyState extends State<Profil_body> {
 
   Future<void> _fetchProfil() async {
     String? nickname = await storage.read(key: 'nickname');
+    print(nickname);
     var url = 'http://13.124.205.29/$nickname/';
     var dio = Dio();
     String? access_token = await storage.read(key: 'jwt_accessToken');
@@ -54,18 +55,19 @@ class _Profil_bodyState extends State<Profil_body> {
         setState(() {
           _profil_data = [response.data];
           print(_profil_data);
-
         });
       } else if (response.statusCode == 401) {
         try {
           response = await dio.get(
-            url,
+            'http://13.124.205.29/token/refresh/',
             options: Options(
               headers: {'Authorization': 'Bearer $refresh_token'},
             ),
           );
           setState(() {
-            _profil_data = [response.data];
+            access_token = response.data['access_token'];
+            storage.delete(key: 'jwt_accessToken');
+            storage.write(key: 'jwt_accessToken', value: access_token);
           });
         } catch (e) {
           print('로그아웃 해');
@@ -112,15 +114,22 @@ class _Profil_bodyState extends State<Profil_body> {
                     child: Row(
                       children: [
                         _profil_data[0]['image_url'] != null
-                            ? CircleAvatar(
-                                radius: 50,
-                                backgroundImage: NetworkImage(
-                                  _profil_data[0]['image_url'],
-                                ))
-                            : CircleAvatar(
-                                radius: 50,
-                                backgroundImage:
-                                    AssetImage('assets/Img/userprofil.jpg'),
+                            ? InkWell(
+                                child: CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage: NetworkImage(
+                                    _profil_data[0]['image_url'],
+                                  ),
+                                ),
+                                onTap: () {},
+                              )
+                            : InkWell(
+                                child: CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage:
+                                      AssetImage('assets/Img/userprofil.jpg'),
+                                ),
+                                onTap: () {},
                               ),
                         SizedBox(
                           width: 20,
@@ -138,8 +147,7 @@ class _Profil_bodyState extends State<Profil_body> {
                                       fontSize: 24,
                                     ),
                                   ),
-                                  _profil_data[0]['profile_info']['qual'] !=
-                                          0
+                                  _profil_data[0]['profile_info']['qual'] != 0
                                       ? const Padding(
                                           padding: EdgeInsets.only(left: 10),
                                           child: Icon(

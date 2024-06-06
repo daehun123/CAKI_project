@@ -139,10 +139,20 @@ class _board_viewerState extends State<board_viewer> {
       } else if (response.statusCode == 401) {
         try {
           response = await dio.get(
-            url,
-            data: {'exists': exists},
+            'http://13.124.205.29/token/refresh/',
             options: Options(
               headers: {'Authorization': 'Bearer $refresh_token'},
+            ),
+          );
+          setState(() {
+            access_token = response.data['access_token'];
+            storage.delete(key: 'jwt_accessToken');
+            storage.write(key: 'jwt_accessToken', value: access_token);
+          });
+          await dio.post(
+            url,
+            options: Options(
+              headers: {'Authorization': 'Bearer $access_token'},
             ),
           );
           setState(() {
@@ -173,6 +183,16 @@ class _board_viewerState extends State<board_viewer> {
               );
             },
           );
+        }
+        var reresponse = await dio.get(url,
+            data: {'exists': exists},
+            options:
+                Options(headers: {'Authorization': 'Bearer $access_token'}));
+        print(reresponse.statusCode);
+        if (reresponse.statusCode == 200) {
+          setState(() {
+            like = exists;
+          });
         }
       }
     } catch (e) {
@@ -288,8 +308,8 @@ class _board_viewerState extends State<board_viewer> {
                               )
                             : CircleAvatar(
                                 radius: 15,
-                                backgroundImage: NetworkImage(
-                                    _board_data[0]['post_info']['writer']['image']),
+                                backgroundImage: NetworkImage(_board_data[0]
+                                    ['post_info']['writer']['image']),
                               ),
                         SizedBox(
                           width: 5,
@@ -299,7 +319,10 @@ class _board_viewerState extends State<board_viewer> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Another_Profil(user_name: _board_data[0]['post_info']['writer']['nickname'],)),
+                                  builder: (context) => Another_Profil(
+                                        user_name: _board_data[0]['post_info']
+                                            ['writer']['nickname'],
+                                      )),
                             );
                           },
                           child: Text(
@@ -356,7 +379,8 @@ class _board_viewerState extends State<board_viewer> {
                             spacing: 8.0,
                             runSpacing: 2.0,
                             children: _board_data.isNotEmpty
-                                ? _board_data[0]['post_info']['tag'].map<Widget>((tag) {
+                                ? _board_data[0]['post_info']['tag']
+                                    .map<Widget>((tag) {
                                     return Chip(
                                       labelPadding: EdgeInsets.all(2.0),
                                       label: Text(
@@ -396,7 +420,8 @@ class _board_viewerState extends State<board_viewer> {
                     child: ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: _board_data[0]['post_info']['ingredients'].length,
+                      itemCount:
+                          _board_data[0]['post_info']['ingredients'].length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
@@ -425,7 +450,7 @@ class _board_viewerState extends State<board_viewer> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('조주법',style: TextStyle(fontSize: 17)),
+                    child: Text('조주법', style: TextStyle(fontSize: 17)),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
@@ -449,37 +474,56 @@ class _board_viewerState extends State<board_viewer> {
                         ),
                       ],
                     ),
-                    // child: ListView.builder(
-                    //   shrinkWrap: true,
-                    //   physics: NeverScrollableScrollPhysics(),
-                    //   itemCount: _board_data[0]['post_info']['body'].length,
-                    //   itemBuilder: (context, index) {
-                    //     final instruction = _board_data[0]['post_info']['body'][index];
-                    //     return Padding(
-                    //       padding: const EdgeInsets.only(bottom: 8.0),
-                    //       child: Column(
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         children: [
-                    //           Wrap(
-                    //             children: [
-                    //               Text(
-                    //                 '- $instruction',
-                    //                 style: TextStyle(fontSize: 16.0),
-                    //                 maxLines: null,
-                    //                 overflow: TextOverflow.visible,
-                    //               ),
-                    //             ],
-                    //           ),
-                    //           Container(
-                    //             height: 1.0,
-                    //             width: double.infinity,
-                    //             color: Colors.grey[300],
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     );
-                    //   },
-                    // ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: _board_data[0]['post_info']['image'].length > 1
+                        ? SizedBox(
+                            height: 100,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount:
+                                  _board_data[0]['post_info']['image'].length -
+                                      1,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Dialog(
+                                            child: InteractiveViewer(
+                                              panEnabled: false,
+                                              boundaryMargin:
+                                                  EdgeInsets.all(20),
+                                              minScale: 0.5,
+                                              maxScale: 2,
+                                              child: Image.network(
+                                                _board_data[0]['post_info']
+                                                    ['image'][index + 1],
+                                                fit: BoxFit.contain,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Image.network(
+                                      _board_data[0]['post_info']['image']
+                                          [index + 1],
+                                      fit: BoxFit.cover,
+                                      height: 100,
+                                      width: 100,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        : Container(),
                   ),
                 ],
               ),
