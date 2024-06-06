@@ -37,49 +37,49 @@ class _Naver_Login_btnState extends State<Naver_Login_btn> {
               (route) => false);
     }
   }
-  Future<void> send_token() async{
+  Future<void> send_token() async {
     var url = 'http://13.124.205.29/authuser/naver/login/';
     var dio = Dio();
 
-    try {
-      var response = await dio.get(
+   // try {
+      dio.get(
         url,
         options: Options(
-          headers: {
-            'Authorization': 'Bearer $_accesstoken',
-            "Authorization": 'Bearer $_refreshtoken'
-          },
+          headers: {},
         ),
       );
-      print('sdsdsdsd : ' + response.statusCode.toString());
-      if(response.statusCode == 200) {
-        await storage.write(key: 'jwt_accessToken', value: _accesstoken);
-        await storage.write(key: 'jwt_refreshToken', value: _refreshtoken);
-        _ckFirstLogin();
-      }
-      // else if(response.statusCode == 401){
-      //   showDialog(
-      //     context: context,
-      //     builder: (BuildContext context) {
-      //       return AlertDialog(
-      //         title: Text('로그인 실패'),
-      //         content: Text('이미 가입된 아이디입니다.'),
-      //         actions: <Widget>[
-      //           TextButton(
-      //             child: Text('확인'),
-      //             onPressed: () {
-      //               Navigator.of(context).pop();
-      //
-      //             },
-      //           ),
-      //         ],
-      //       );
-      //     },
-      //   );
-      // }
-    }catch(e){
-      print(': ' + e.toString());
-    }
+      // print('sdsdsdsd : ' + response.statusCode.toString());
+      // if(response.statusCode == 200) {
+      //   _accesstoken = response.headers['access_token'];
+      //   _refreshtoken = response.headers['refresh_token'];
+      //   await storage.write(key: 'jwt_accessToken', value: _accesstoken);
+      //   await storage.write(key: 'jwt_refreshToken', value: _refreshtoken);
+      //   print(_accesstoken);
+      //   _ckFirstLogin();
+    //}
+    // else if(response.statusCode == 401){
+    //   showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return AlertDialog(
+    //         title: Text('로그인 실패'),
+    //         content: Text('이미 가입된 아이디입니다.'),
+    //         actions: <Widget>[
+    //           TextButton(
+    //             child: Text('확인'),
+    //             onPressed: () {
+    //               Navigator.of(context).pop();
+    //
+    //             },
+    //           ),
+    //         ],
+    //       );
+    //     },
+    //   );
+    // }
+    // }catch(e){
+    //   print(': ' + e.toString());
+    // }
 
   }
   Future<void> _naverLogin() async {
@@ -89,7 +89,12 @@ class _Naver_Login_btnState extends State<Naver_Login_btn> {
         _accesstoken = res.accessToken;
         _refreshtoken = res.refreshToken;
         email = value.account.email;
-        send_token();
+        await storage.write(key: 'jwt_accessToken', value: _accesstoken);
+        await storage.write(key: 'jwt_refreshToken', value: _refreshtoken);
+        print(_accesstoken);
+        print(_refreshtoken);
+        print(email);
+        _ckFirstLogin();
       });
 
     } catch (e) {
@@ -113,7 +118,7 @@ class _Naver_Login_btnState extends State<Naver_Login_btn> {
         InkWell(
           child: Image.asset('assets/Img/naverlogin_btn.png',height: 56,),
           onTap: (){
-            _naverLogin();
+            send_token();
           },
         ),
         InkWell(
