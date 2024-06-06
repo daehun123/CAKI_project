@@ -5,20 +5,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../BoardView/board_view_screen.dart';
+
 class FilterResultScreen extends StatelessWidget {
   final List<String> selectedKeywords; // 선택된 키워드 리스트를 받음
 
   const FilterResultScreen({Key? key, required this.selectedKeywords})
       : super(key: key);
 
-
   static const storage = FlutterSecureStorage();
 
   Future<Map<String, dynamic>> _fetchSearchResults(String selectedItem) async {
     String baseUrl = 'http://13.124.205.29/search';
-    String keywords = selectedKeywords.isNotEmpty
-        ? selectedKeywords.join(", ")
-        : '';
+    String keywords =
+        selectedKeywords.isNotEmpty ? selectedKeywords.join(", ") : '';
 
     String url = '$baseUrl?q=&k=$keywords'; // 백엔드 요청 URL
 
@@ -68,7 +68,7 @@ class FilterResultScreen extends StatelessWidget {
                   : [];
               if (postList.isEmpty) {
                 return Center(
-                  child: Text('No information found.'),
+                  child: Text('찾는 레시피가 없습니다.'),
                 );
               } else {
                 return ListView.builder(
@@ -79,85 +79,101 @@ class FilterResultScreen extends StatelessWidget {
                     int postId = post['post_id'] ?? 0;
                     String postTitle = post['post_title'] ?? '';
                     List<String> postImages =
-                    List<String>.from(post['post_image'] ?? []);
+                        List<String>.from(post['post_image'] ?? []);
                     List<String> postTags =
-                    List<String>.from(post['post_tag'] ?? []);
+                        List<String>.from(post['post_tag'] ?? []);
                     int postLike = post['post_like'] ?? 0;
 
-                    return Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => board_viewer(boardid: postId),
+                          ),
+                        );
+                      },
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    postImages[0],
-                                    fit: BoxFit.cover,
-                                    width: 100,
-                                    height: 100,
-                                  ),
-                                ),
-                                SizedBox(width: 50),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    children: [
-                                      Text(
-                                        writerNickname,
-                                        style: TextStyle(fontSize: 16,
-                                            fontWeight: FontWeight.bold),
+                                Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.network(
+                                        postImages[0],
+                                        fit: BoxFit.cover,
+                                        width: 100,
+                                        height: 100,
                                       ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        postTitle,
-                                        style: TextStyle(fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      SizedBox(height: 5),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment
-                                            .spaceBetween,
+                                    ),
+                                    SizedBox(width: 50),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Row(
-                                            children: [
-                                              if (postTags.isNotEmpty)
-                                                for (int i = postTags.length -
-                                                    2; i < postTags.length; i++)
-                                                  Text(
-                                                    '#' + postTags[i] + ' ',
-                                                    style: TextStyle(
-                                                        color: Colors.blue),
-                                                  ),
-                                            ],
+                                          Text(
+                                            writerNickname,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
+                                          SizedBox(height: 5),
+                                          Text(
+                                            postTitle,
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(height: 5),
                                           Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Icon(
-                                                Icons.favorite,
-                                                color: Colors.red,
-                                                size: 20,
+                                              Row(
+                                                children: [
+                                                  if (postTags.isNotEmpty)
+                                                    for (int i =
+                                                            postTags.length - 2;
+                                                        i < postTags.length;
+                                                        i++)
+                                                      Text(
+                                                        '#' + postTags[i] + ' ',
+                                                        style: TextStyle(
+                                                            color: Colors.blue),
+                                                      ),
+                                                ],
                                               ),
-                                              Text(postLike.toString()),
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.favorite,
+                                                    color: Colors.red,
+                                                    size: 20,
+                                                  ),
+                                                  Text(postLike.toString()),
+                                                ],
+                                              ),
                                             ],
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
+                                SizedBox(height: 10),
                               ],
                             ),
-                            SizedBox(height: 10),
-                          ],
+                          ),
                         ),
-                      ),
-                    );
+                      );
                   },
                 );
               }
