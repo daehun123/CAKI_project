@@ -27,6 +27,7 @@ class _ArrowScreenState extends State<ArrowScreen> {
   String _description = '';
   String _sugarcontent = '';
   String _alcoholconcentration = '';
+  String _etc = '';
 
   //카테고리 종류 목록
   List<String> _categories = ['classic', 'expert', 'simple', 'BFYB'];
@@ -55,6 +56,12 @@ class _ArrowScreenState extends State<ArrowScreen> {
     '도수3',
     '도수2',
     '도수1',
+  ];
+
+  List<String> _etcall = [
+    '탄산',
+    '과일',
+    '우유/크림',
   ];
 
   List<String> ingredients = []; // 재료 목록을 저장할 리스트
@@ -93,7 +100,8 @@ class _ArrowScreenState extends State<ArrowScreen> {
         _category,
         _alcoholcategory,
         _alcoholconcentration,
-        _sugarcontent
+        _sugarcontent,
+        _etc
       ]),
     });
 
@@ -309,6 +317,29 @@ class _ArrowScreenState extends State<ArrowScreen> {
               onChanged: (value) {
                 setState(() {
                   _sugarcontent = value!;
+                });
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '필수 입력 항목입니다.';
+                }
+                return null;
+              },
+            ),SizedBox(height: 16.0),
+            // 기타 선택
+            DropdownButtonFormField(
+              decoration: InputDecoration(labelText: '기타'),
+              value: _etc.isEmpty ? null : _etc,
+              // 빈 문자열이 아닌 경우에만 value 설정
+              items: _etcall.map((String sugar) {
+                return DropdownMenuItem(
+                  value: sugar,
+                  child: Text(sugar),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  _etc = value!;
                 });
               },
               validator: (value) {

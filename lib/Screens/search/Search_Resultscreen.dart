@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../BoardView/board_view_screen.dart';
+
 class ResultScreen extends StatelessWidget {
   final String? selectedItem;
 
@@ -64,7 +66,7 @@ class ResultScreen extends StatelessWidget {
               if (postList.isEmpty) {
                 // 검색 결과가 없는 경우
                 return Center(
-                  child: Text('찾는 정보가 없습니다.'),
+                  child: Text('찾는 레시피가 없습니다.'),
                 );
               } else {
                 // 검색 결과가 있는 경우
@@ -83,75 +85,84 @@ class ResultScreen extends StatelessWidget {
                     List<String>.from(post['post_tag'] ?? []);
                     int postLike = post['post_like'] ?? 0;
 
-                    return Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    postImages[0],
-                                    fit: BoxFit.cover,
-                                    width: 100,
-                                    height: 100,
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => board_viewer(boardid: postId),
+                          ),
+                        );
+                      },
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                      postImages.isNotEmpty ? postImages[0] : 'https://via.placeholder.com/100', // 이미지가 없을 때 대체 이미지
+                                      fit: BoxFit.cover,
+                                      width: 100,
+                                      height: 100,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 50),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        writerNickname,
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        postTitle,
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      SizedBox(height: 5),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              if (postTags.isNotEmpty)
-                                                for (int i = postTags.length - 2; i < postTags.length; i++)
-                                                  Text(
-                                                    '#' + postTags[i] + ' ',
-                                                    style: TextStyle(color: Colors.blue),
-                                                  ),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              Icon(
-                                                Icons.favorite,
-                                                color: Colors.red,
-                                                size: 20,
-                                              ),
-                                              Text(postLike.toString()),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                  SizedBox(width: 50),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          writerNickname,
+                                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          postTitle,
+                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        SizedBox(height: 5),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                if (postTags.isNotEmpty)
+                                                  for (int i = postTags.length - 2; i < postTags.length; i++)
+                                                    Text(
+                                                      '#' + postTags[i] + ' ',
+                                                      style: TextStyle(color: Colors.blue),
+                                                    ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.favorite,
+                                                  color: Colors.red,
+                                                  size: 20,
+                                                ),
+                                                Text(postLike.toString()),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                          ],
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                            ],
+                          ),
                         ),
                       ),
                     );
-
                   },
                 );
               }
