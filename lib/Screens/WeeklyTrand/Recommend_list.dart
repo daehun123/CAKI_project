@@ -41,6 +41,7 @@ class _Trend_listState extends State<Trend_list> {
     super.initState();
     _loadDate();
     _getWeekday();
+
   }
 
   void _getWeekday() {
@@ -72,16 +73,13 @@ class _Trend_listState extends State<Trend_list> {
     setState(() {
       isLoading = false;
       _setTitle();
+
     });
   }
 
   Future<void> shareLocation() async {
-    var queryParams = {
-      'nx': widget.nx.toStringAsFixed(0),
-      'ny': widget.ny.toStringAsFixed(0)
-    };
-    var queryString = Uri(queryParameters: queryParams).query;
-    var url = 'http://13.124.205.29/main?$queryString';
+
+    var url = 'http://13.124.205.29/main/?'+'nx='+widget.nx.toStringAsFixed(0)+'&ny='+widget.ny.toStringAsFixed(0);
     var dio = Dio();
     String? access_token = await storage.read(key: 'jwt_accessToken');
     String? refresh_token = await storage.read(key: 'jwt_refreshToken');

@@ -38,12 +38,11 @@ class _MyHomePageState extends State<MyHomePage> {
     final main_Location = provider.location;
     double? nx = double.tryParse(main_Location.latitude.toString());
     double? ny = double.tryParse(main_Location.longitude.toString());
-    var queryParams = {
-      'nx': nx?.toStringAsFixed(0) ?? '0',
-      'ny': ny?.toStringAsFixed(0) ?? '0'
-    };
-    var queryString = Uri(queryParameters: queryParams).query;
-    var url = 'http://13.124.205.29/main?$queryString';
+
+    var url = 'http://13.124.205.29/main/?'+'nx='+nx!.toStringAsFixed(0)+'&ny='+ny!.toStringAsFixed(0);
+    print(url);
+
+
     var dio = Dio();
     String? access_token = await storage.read(key: 'jwt_accessToken');
     String? refresh_token = await storage.read(key: 'jwt_refreshToken');
@@ -102,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       }
     } catch (e) {
-      print('error');
+      print('error11111');
     }
   }
 
