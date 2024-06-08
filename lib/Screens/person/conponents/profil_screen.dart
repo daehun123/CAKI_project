@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 
 import '../../Main_veiw/main_screen.dart';
@@ -22,7 +23,8 @@ class _Profil_bodyState extends State<Profil_body> {
   bool isLoading = true;
   var count;
   static const storage = FlutterSecureStorage();
-
+  final picker = ImagePicker();
+  XFile? image;
   @override
   void initState() {
     super.initState();
@@ -69,6 +71,7 @@ class _Profil_bodyState extends State<Profil_body> {
             storage.delete(key: 'jwt_accessToken');
             storage.write(key: 'jwt_accessToken', value: access_token);
           });
+          _fetchProfil();
         } catch (e) {
           print('로그아웃 해');
           showDialog(
@@ -101,6 +104,78 @@ class _Profil_bodyState extends State<Profil_body> {
     }
   }
 
+  Future<void> _chageimage() async{
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      String? nickname = await storage.read(key: 'nickname');
+      var url = 'http://13.124.205.29/$nickname/';
+      var dio = Dio();
+      String? access_token = await storage.read(key: 'jwt_accessToken');
+      String? refresh_token = await storage.read(key: 'jwt_refreshToken');
+
+      try {
+        var formData = FormData.fromMap({
+          'image': await MultipartFile.fromFile(
+              pickedFile.path, filename: 'image.jpg'),
+        });
+
+        var response = await dio.put(
+          url,
+          data: {'image_url': formData},
+          options: Options(
+            headers: {'Authorization': 'Bearer $access_token'},
+          ),
+        );
+        if (response.statusCode == 200) {
+          setState(() {
+            _fetchProfil();
+          });
+        } else if (response.statusCode == 401) {
+          try {
+            response = await dio.get(
+              'http://13.124.205.29/token/refresh/',
+              options: Options(
+                headers: {'Authorization': 'Bearer $refresh_token'},
+              ),
+            );
+            setState(() {
+              access_token = response.data['access_token'];
+              storage.delete(key: 'jwt_accessToken');
+              storage.write(key: 'jwt_accessToken', value: access_token);
+            });
+            _chageimage();
+          } catch (e) {
+            print('로그아웃 해');
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('토큰 만료'),
+                  content: Text('다시 로그인 해주세요.'),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('확인'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                const Welcome_Screen()),
+                                (route) => false);
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+        }
+      } catch (e) {
+        print('error');
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return isLoading
@@ -121,7 +196,32 @@ class _Profil_bodyState extends State<Profil_body> {
                                     _profil_data[0]['image_url'],
                                   ),
                                 ),
-                                onTap: () {},
+                                onTap: () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 130),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              TextButton(
+                                                  onPressed: () {
+                                                    _chageimage();
+                                                  },
+                                                  child: Text('변경')),
+                                              TextButton(
+                                                  onPressed: () {},
+                                                  child: Text(
+                                                    '삭제',
+                                                    style: TextStyle(
+                                                        color: Colors.red),
+                                                  ))
+                                            ],
+                                          ),
+                                        );
+                                      });
+                                },
                               )
                             : InkWell(
                                 child: CircleAvatar(
@@ -129,7 +229,30 @@ class _Profil_bodyState extends State<Profil_body> {
                                   backgroundImage:
                                       AssetImage('assets/Img/userprofil.jpg'),
                                 ),
-                                onTap: () {},
+                                onTap: () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 130),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              TextButton(
+                                                  onPressed: () {},
+                                                  child: Text('변경')),
+                                              TextButton(
+                                                  onPressed: () {},
+                                                  child: Text(
+                                                    '삭제',
+                                                    style: TextStyle(
+                                                        color: Colors.red),
+                                                  ))
+                                            ],
+                                          ),
+                                        );
+                                      });
+                                },
                               ),
                         SizedBox(
                           width: 20,

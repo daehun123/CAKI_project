@@ -99,16 +99,11 @@ class _SignupFormState extends State<SignupForm> {
   Future<void> _check_email(String email) async {
     var url = 'http://13.124.205.29/signup/emailverifi/';
     var dio = Dio();
-    String? access_token = await storage.read(key: 'jwt_accessToken');
-    String? refresh_token = await storage.read(key: 'jwt_refreshToken');
 
     try {
       var response = await dio.post(
         url,
         data: {'email': email},
-        options: Options(
-          headers: {'Authorization': 'Bearer $access_token'},
-        ),
       );
       if (response.statusCode == 200) {
         debugPrint('complete');
@@ -160,45 +155,6 @@ class _SignupFormState extends State<SignupForm> {
             );
           },
         );
-      } else if (response.statusCode == 401) {
-        try {
-          response = await dio.get(
-            'http://13.124.205.29/token/refresh/',
-            options: Options(
-              headers: {'Authorization': 'Bearer $refresh_token'},
-            ),
-          );
-          setState(() {
-            access_token = response.data['access_token'];
-            storage.delete(key: 'jwt_accessToken');
-            storage.write(key: 'jwt_accessToken', value: access_token);
-          });
-        } catch (e) {
-          print('로그아웃 해');
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('토큰 만료'),
-                content: Text('다시 로그인 해주세요.'),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text('확인'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const Welcome_Screen()),
-                          (route) => false);
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-        }
       }
     } catch (e) {
       print(e);

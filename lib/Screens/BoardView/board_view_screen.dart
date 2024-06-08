@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:caki_project/Components/constants.dart';
 import 'package:caki_project/Components/location.dart';
 import 'package:caki_project/Components/mainprovider.dart';
+import 'package:caki_project/Screens/Main_veiw/main_screen.dart';
 import 'package:caki_project/Screens/person/Personscreen.dart';
 import 'package:caki_project/Screens/person/another_profil.dart';
 import 'package:caki_project/Screens/splash_screen.dart';
@@ -126,7 +127,6 @@ class _board_viewerState extends State<board_viewer> {
     var dio = Dio();
     String? access_token = await storage.read(key: 'jwt_accessToken');
     String? refresh_token = await storage.read(key: 'jwt_refreshToken');
-    print(url);
     try {
       var response = await dio.get(url,
           data: {'exists': exists},
@@ -258,6 +258,45 @@ class _board_viewerState extends State<board_viewer> {
     }
   }
 
+  Future<void> _delete() async{
+    var url =
+        'http://13.124.205.29/deletepost/' + widget.boardid.toString() + '/';
+    var dio = Dio();
+    String? access_token = await storage.read(key: 'jwt_accessToken');
+    String? refresh_token = await storage.read(key: 'jwt_refreshToken');
+    try{
+      var response = await dio.delete(url,
+          options: Options(headers: {'Authorization': 'Bearer $access_token'}));
+      if(response.statusCode == 200){
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('삭제 완료'),
+              content: Text('성공적으로 삭제되었습니다.'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('확인'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                            MyHomePage()),
+                            (route) => false);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }catch(e){
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return isLoading
@@ -272,6 +311,26 @@ class _board_viewerState extends State<board_viewer> {
                 },
               ),
               backgroundColor: kColor,
+              actions: [
+                _board_data[0]['post_info']['writer']['nickname'] ==
+                    _board_data[0]['user_info']['nickname']
+                    ? PopupMenuButton<String>(
+                  onSelected: (value) {
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem<String>(
+                        value: 'option1',
+                        child: Text('삭제하기'),
+                        onTap: () {
+                          _delete();
+                        },
+                      ),
+                    ];
+                  },
+                )
+                    : Container(),
+              ],
             ),
             body: SingleChildScrollView(
               child: Column(
@@ -335,11 +394,16 @@ class _board_viewerState extends State<board_viewer> {
                         SizedBox(
                           width: 5,
                         ),
-                        Icon(
-                          Icons.verified,
-                          color: Colors.lightBlue,
-                          size: 18,
-                        ),
+                        _board_data[0]['post_info']['writer']['qual'] != 0
+                            ? const Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: Icon(
+                                  Icons.verified,
+                                  color: Colors.lightBlue,
+                                  size: 18,
+                                ),
+                              )
+                            : Container(),
                         Spacer(
                           flex: 1,
                         ),

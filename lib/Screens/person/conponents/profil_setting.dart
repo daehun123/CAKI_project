@@ -22,8 +22,6 @@ class _ProfilSettingState extends State<ProfilSetting> {
   final pw_formkey = GlobalKey<FormState>();
 
   String? email, nickname, introduce, password, pwcheck;
-  final picker = ImagePicker();
-  XFile? image;
 
   String? check_code;
   bool flag = false;
@@ -35,20 +33,72 @@ class _ProfilSettingState extends State<ProfilSetting> {
   Future<void> _naverLogout() async {
     try {
       await FlutterNaverLogin.logOutAndDeleteToken();
-      print('object');
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => const Welcome_Screen()),
+          (route) => false);
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<void> _chage_token() async {
+    String? refresh_token = await storage.read(key: 'jwt_refreshToken');
+    var dio = Dio();
+    String? access_token;
+    try {
+      var response = await dio.get(
+        'http://13.124.205.29/token/refresh/',
+        options: Options(
+          headers: {'Authorization': 'Bearer $refresh_token'},
+        ),
+      );
+      print(access_token);
+      access_token = response.data['access_token'];
+      print(access_token);
+      access_token = response.data['refresh_token'];
+      await storage.delete(key: 'jwt_accessToken');
+      await storage.delete(key: 'jwt_refreshToken');
+      await storage.write(key: 'jwt_refreshToken', value: access_token);
+      await storage.write(key: 'jwt_accessToken', value: access_token);
+    } catch (e) {
+      print('로그아웃 해');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('토큰 만료'),
+            content: Text('다시 로그인 해주세요.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('확인'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const Welcome_Screen()),
+                      (route) => false);
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
   Future<void> _set_profil(String? email, String? nickname, String? password,
       String? introduce) async {
     String? path_nickname = await storage.read(key: 'nickname');
+    print(path_nickname);
     var url = 'http://13.124.205.29/$path_nickname/';
     var dio = Dio();
     String? access_token = await storage.read(key: 'jwt_accessToken');
-    String? refresh_token = await storage.read(key: 'jwt_refreshToken');
 
+    print('data : $email, $nickname, $introduce, $password ,');
     try {
       var response = await dio.put(
         url,
@@ -56,17 +106,34 @@ class _ProfilSettingState extends State<ProfilSetting> {
           'email': email,
           'nickname': nickname,
           'password': password,
-          'introduce': introduce
+          'introduce': introduce,
+          'image_url': null
         },
         options: Options(
           headers: {'Authorization': 'Bearer $access_token'},
         ),
       );
-      if(response.statusCode == 200){
-        storage.delete(key: 'nickname');
-        storage.write(key: 'nickname', value: nickname);
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        print(access_token);
+        var access_token_change = response.data['access_token'];
+        print(access_token);
+        var refresh_token = response.data['refresh_token'];
+        await storage.delete(key: 'jwt_accessToken');
+        await storage.delete(key: 'jwt_refreshToken');
+        await storage.write(key: 'jwt_refreshToken', value: refresh_token);
+        await storage.write(key: 'jwt_accessToken', value: access_token_change);
+
+        if (nickname == null) {
+          print('yyyyyyyyyyyyyyyyyyyyyyyy');
+        } else {
+          print('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+          storage.delete(key: 'nickname');
+          storage.write(key: 'nickname', value: nickname);
+        }
         print(path_nickname);
         print(nickname);
+
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -81,58 +148,36 @@ class _ProfilSettingState extends State<ProfilSetting> {
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                            PersonScreen()),
-                            (route) => false);
+                            builder: (BuildContext context) => PersonScreen()),
+                        (route) => false);
                   },
                 ),
               ],
             );
           },
         );
-      }else if (response.statusCode == 401) {
-        try {
-          response = await dio.get(
-            'http://13.124.205.29/token/refresh/',
-            options: Options(
-              headers: {'Authorization': 'Bearer $refresh_token'},
-            ),
-          );
-          setState(() {
-            access_token = response.data['access_token'];
-            storage.delete(key: 'jwt_accessToken');
-            storage.write(key: 'jwt_accessToken', value: access_token);
-          });
-
-        } catch (e) {
-          print('로그아웃 해');
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('토큰 만료'),
-                content: Text('다시 로그인 해주세요.'),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text('확인'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                              const Welcome_Screen()),
-                              (route) => false);
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-        }
+      } else if (response.statusCode == 401) {
+        _chage_token();
       }
     } catch (e) {
       print(e);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('중복된 프로필'),
+            content: Text('닉네임이나 이메일이 중복되었습니다.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('확인'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -304,9 +349,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
   }
 
   Future<void> logout() async {
-    storage.delete(key: 'jwt_accessToken');
-    storage.delete(key: 'jwt_refreshToken');
-    storage.delete(key: 'nickname');
+    await storage.deleteAll();
   }
 
   @override
@@ -388,7 +431,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
                   child: TextFormField(
                     textInputAction: TextInputAction.next,
                     cursorColor: const Color(0xFF8A9352),
-                    onSaved: (value) => nickname = value,
+                    onChanged: (value) => nickname = value,
                     decoration: const InputDecoration(
                       labelText: 'NickName',
                       prefixIcon: Padding(
@@ -532,7 +575,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
                             setting_formkey.currentState!.save();
                             print(email);
                             print(password);
-                            _set_profil(email, nickname, password, introduce);
+                            _set_profil(email, nickname, pwcheck, introduce);
                           }
                         },
                         child: Text('변경'.toUpperCase()),
@@ -559,8 +602,9 @@ class _ProfilSettingState extends State<ProfilSetting> {
                                   MaterialPageRoute(
                                       builder: (BuildContext context) =>
                                           Welcome_Screen()),
-                                      (route) => false);
-                            }, child: Text('로그아웃'))),
+                                  (route) => false);
+                            },
+                            child: Text('로그아웃'))),
                     const Spacer(
                       flex: 2,
                     ),
