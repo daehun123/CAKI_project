@@ -4,7 +4,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Components/mainprovider.dart';
@@ -12,10 +11,10 @@ import 'MP_WeeklyAddBT.dart';
 
 //이미지 리스트
 final List<String> imgList = [
-  'assets/Img/date.jpeg',
-  'assets/Img/star.jpeg',
-  'assets/Img/weather.jpeg',
-  'assets/Img/ingredient.jpeg',
+  'assets/Img/Date.png',
+  'assets/Img/Like.png',
+  'assets/Img/Weather.png',
+  'assets/Img/Ingredient.png',
 ];
 
 final List<Widget> imageSliders = imgList
@@ -45,7 +44,7 @@ final List<Widget> imageSliders = imgList
                         padding: EdgeInsets.symmetric(
                             vertical: 10.0, horizontal: 20.0),
                         child: Text(
-                          '${imgList.indexOf(item) + 1}번째 추천',
+                          _getRecommendationText(imgList.indexOf(item)), //각각 해당하는 배너 이름 다름.
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20.0,
@@ -63,6 +62,20 @@ class WeeklyTrand extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _WeeklyTrandState();
+  }
+}
+String _getRecommendationText(int index) {
+  switch (index) {
+    case 0:
+      return '추천 요일별';
+    case 1:
+      return '추천 좋아요';
+    case 2:
+      return '추천 날씨';
+    case 3:
+      return '추천 취향';
+    default:
+      return '';
   }
 }
 

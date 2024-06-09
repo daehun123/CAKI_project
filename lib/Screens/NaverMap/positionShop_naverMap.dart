@@ -3,14 +3,27 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
-
+import 'package:url_launcher/url_launcher.dart'; // url_launcher 패키지 import
+import 'package:dio/dio.dart';
+import '../../Components/background.dart';
 import '../../Components/mainprovider.dart';
 
 class PositionShop extends StatelessWidget {
   const PositionShop({Key? key}) : super(key: key);
 
+  // 지도 초기화하기
+  Future<void> _initialize() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    try {
+      await NaverMapSdk.instance.initialize(
+        clientId: 'li44ix0d94', // 클라이언트 ID 설정
+        onAuthFailed: (e) => log("네이버맵 인증오류 : $e", name: "onAuthFailed"),
+      );
+    } catch (e) {
+      log("네이버맵 초기화 오류 : $e", name: "initializeNaverMap");
+    }
+  }
 
   // 백엔드에서 데이터 가져오기
   Future<List<Map<String, dynamic>>> _fetchData() async {
@@ -41,15 +54,27 @@ class PositionShop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 지도 초기화
+    _initialize();
+    final provider = Provider.of<MainProvider>(context, listen: false); // MainProvider 가져오기
     final Completer<NaverMapController> mapControllerCompleter = Completer();
-    return MaterialApp(
-      home: Scaffold(
+
+    return Background( // Background 위젯 추가
+      child: Scaffold(
         appBar: AppBar(
           title: Text('근처 매장'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back), // 아이콘 설정
+            onPressed: () {
+              Navigator.pop(context); // 이전 화면으로 이동
+            },
+          ),
+          backgroundColor: Color(0xFF8A9352),
         ),
         body: FutureBuilder(
           future: _fetchData(),
-          builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+          builder:
+              (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
@@ -61,6 +86,12 @@ class PositionShop extends StatelessWidget {
                   indoorEnable: true,
                   locationButtonEnable: false,
                   consumeSymbolTapEvents: false,
+                  initialCameraPosition: NCameraPosition(
+                    target: NLatLng(
+                        36.8188, 127.1571
+                    ), // 천안시의 위도, 경도
+                    zoom: 12,
+                  ),
                 ),
                 onMapReady: (controller) async {
                   mapControllerCompleter.complete(controller);
@@ -78,9 +109,25 @@ class PositionShop extends StatelessWidget {
                       position: target,
                     );
                     controller.addOverlay(marker);
-
-                    final onMarkerInfoWindow = NInfoWindow.onMarker(id: marker.info.id, text: shopName);
+                    // 마커 이름 보여주기
+                    final onMarkerInfoWindow = NInfoWindow.onMarker(
+                        id: marker.info.id, text: shopName);
                     marker.openInfoWindow(onMarkerInfoWindow);
+
+                    marker.setOnTapListener((NMarker marker) async {
+                      // 마커 터치 이벤트 처리
+                      print("마커가 터치되었습니다. id: ${marker.info.id}");
+
+                      // URL 열기
+                      String url = shop['url'];
+                      if (url.isNotEmpty) {
+                        try {
+                          await launch(url);
+                        } catch (e) {
+                          print('웹사이트를 열던 중 오류가 발생했습니다: $e');
+                        }
+                      }
+                    });
                   }
                 },
               );
