@@ -92,10 +92,8 @@ class _ArrowScreenState extends State<ArrowScreen> {
 
     // FormData 생성
     FormData formData = FormData.fromMap({
-      "post_body": jsonEncode({
-        "title": _title,
-        "text": "${ingredientsText}\n제조법${_description}"
-      }),
+      "post_body": jsonEncode(
+          {"title": _title, "text": "${ingredientsText}\n제조법${_description}"}),
       "post_tag": jsonEncode([
         _category,
         _alcoholcategory,
@@ -285,7 +283,8 @@ class _ArrowScreenState extends State<ArrowScreen> {
             // 도수 선택
             DropdownButtonFormField(
               decoration: InputDecoration(labelText: '도수'),
-              value: _alcoholconcentration.isEmpty ? null : _alcoholconcentration,
+              value:
+                  _alcoholconcentration.isEmpty ? null : _alcoholconcentration,
               // 빈 문자열이 아닌 경우에만 value 설정
               items: _alcohol.map((String alcohol) {
                 return DropdownMenuItem(
@@ -338,7 +337,8 @@ class _ArrowScreenState extends State<ArrowScreen> {
                 }
                 return null;
               },
-            ),SizedBox(height: 16.0),
+            ),
+            SizedBox(height: 16.0),
             // 기타 선택
             DropdownButtonFormField(
               decoration: InputDecoration(labelText: '기타'),
@@ -367,7 +367,8 @@ class _ArrowScreenState extends State<ArrowScreen> {
                     children: [
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                          margin:
+                              EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                           child: Row(
                             children: [
                               Expanded(
@@ -473,7 +474,8 @@ class _ArrowScreenState extends State<ArrowScreen> {
                   ),
                   child: IconButton(
                     onPressed: () async {
-                      image = await picker.pickImage(source: ImageSource.camera);
+                      image =
+                          await picker.pickImage(source: ImageSource.camera);
                       // 카메라로 촬영하지 않고 뒤로가기 버튼을 누를 경우, null값이 저장되므로 if문을 통해 null이 아닐 경우에만 images변수로 저장하도록 합니다
                       if (image != null) {
                         setState(() {
@@ -515,7 +517,6 @@ class _ArrowScreenState extends State<ArrowScreen> {
                         }
                       });
                     },
-
                     icon: Icon(
                       Icons.add_photo_alternate_outlined,
                       size: 30,

@@ -57,6 +57,8 @@ class _MyAppState extends State<MyApp> {
       latitude = position.latitude.toString();
       longitude = position.longitude.toString();
       provider.updateLocation(latitude, longitude);
+      print(latitude);
+      print(longitude);
     });
   }
 

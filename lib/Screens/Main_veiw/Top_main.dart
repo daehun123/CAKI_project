@@ -9,7 +9,7 @@ String getWeatherInEnglish(String weather) {
       return 'sunny';
     case '흐림':
       return 'cloudy';
-    case '구름':
+    case '구름많음':
       return 'cloudy';
     case '비':
       return 'rainy';
