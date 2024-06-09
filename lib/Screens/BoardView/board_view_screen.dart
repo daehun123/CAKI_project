@@ -16,6 +16,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 import '../Main_veiw/Bottom_main.dart';
+import '../NaverMap/positionShop_naverMap.dart';
 import '../Welcome/welcome_screen.dart';
 
 class board_viewer extends StatefulWidget {
@@ -407,6 +408,15 @@ class _board_viewerState extends State<board_viewer> {
                             : Container(),
                         Spacer(
                           flex: 1,
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.map_outlined),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => PositionShop()),
+                            );
+                          },
                         ),
                         IconButton(
                           icon: Icon(

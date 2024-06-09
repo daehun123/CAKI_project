@@ -141,6 +141,9 @@ class _ArrowScreenState extends State<ArrowScreen> {
                 TextButton(
                   child: Text('확인'),
                   onPressed: () {
+                    setState(() {
+                      images.clear(); // 이미지 리스트를 비워줍니다.
+                    });
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => MyHomePage()),
@@ -301,6 +304,16 @@ class _ArrowScreenState extends State<ArrowScreen> {
                 return null;
               },
             ),
+            Center(
+              child: Text(
+                '1=20%미만, 2=20%이상40%미만, 3=40%이상',
+                textAlign: TextAlign.center, // 이 줄은 텍스트를 센터 정렬로 합니다
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w100, // 텍스트 굵기 줄이기
+                ), // 원하는 경우 텍스트 스타일 설정
+              ),
+            ),
             SizedBox(height: 16.0),
             // 당도 선택
             DropdownButtonFormField(
@@ -341,12 +354,6 @@ class _ArrowScreenState extends State<ArrowScreen> {
                 setState(() {
                   _etc = value!;
                 });
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return '필수 입력 항목입니다.';
-                }
-                return null;
               },
             ),
             SizedBox(height: 16.0),
