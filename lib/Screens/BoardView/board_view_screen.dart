@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:caki_project/Components/constants.dart';
 import 'package:caki_project/Components/location.dart';
 import 'package:caki_project/Components/mainprovider.dart';
+import 'package:caki_project/Screens/BoardView/components/review.dart';
 import 'package:caki_project/Screens/Main_veiw/main_screen.dart';
 import 'package:caki_project/Screens/person/Personscreen.dart';
 import 'package:caki_project/Screens/person/another_profil.dart';
@@ -589,6 +590,7 @@ class _board_viewerState extends State<board_viewer> {
                           )
                         : Container(),
                   ),
+                  keyword_reveiw(boardid: widget.boardid),
                 ],
               ),
             ),

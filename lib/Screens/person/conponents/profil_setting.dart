@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../Welcome/welcome_screen.dart';
 
@@ -352,6 +353,15 @@ class _ProfilSettingState extends State<ProfilSetting> {
     await storage.deleteAll();
   }
 
+  _openURL() async{
+    final Uri _url = Uri.parse('https://form.naver.com/response/zvTw4pIBvIXIbb16RC868g');
+
+    if(await canLaunchUrl(_url)){
+      await launchUrl(_url);
+    }else{
+      throw 'Could not launch $_url';
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -606,6 +616,21 @@ class _ProfilSettingState extends State<ProfilSetting> {
                             },
                             child: Text('로그아웃'))),
                     const Spacer(
+                      flex: 2,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16.0),
+                Row(
+                  children: [
+                    Spacer(
+                      flex: 2,
+                    ),
+                    Expanded(
+                        flex: 8,
+                        child: ElevatedButton(
+                            onPressed: () {_openURL();}, child: Text('전문가 인증'))),
+                    Spacer(
                       flex: 2,
                     ),
                   ],
