@@ -3,8 +3,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart'; // url_launcher 패키지 import
 import 'package:dio/dio.dart';
+import '../../Components/background.dart';
+import '../../Components/mainprovider.dart';
 
 class PositionShop extends StatelessWidget {
   const PositionShop({Key? key}) : super(key: key);
@@ -31,7 +34,8 @@ class PositionShop extends StatelessWidget {
       final response = await dio.get(url);
       if (response.statusCode == 200) {
         final responseData = response.data;
-        if (responseData is Map<String, dynamic> && responseData.containsKey('shops')) {
+        if (responseData is Map<String, dynamic> &&
+            responseData.containsKey('shops')) {
           final List<dynamic> shops = responseData['shops'];
           return List<Map<String, dynamic>>.from(shops);
         } else {
@@ -52,17 +56,25 @@ class PositionShop extends StatelessWidget {
   Widget build(BuildContext context) {
     // 지도 초기화
     _initialize();
-
+    final provider = Provider.of<MainProvider>(context, listen: false); // MainProvider 가져오기
     final Completer<NaverMapController> mapControllerCompleter = Completer();
 
-    return MaterialApp(
-      home: Scaffold(
+    return Background( // Background 위젯 추가
+      child: Scaffold(
         appBar: AppBar(
           title: Text('근처 매장'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back), // 아이콘 설정
+            onPressed: () {
+              Navigator.pop(context); // 이전 화면으로 이동
+            },
+          ),
+          backgroundColor: Color(0xFF8A9352),
         ),
         body: FutureBuilder(
           future: _fetchData(),
-          builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+          builder:
+              (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
@@ -75,7 +87,9 @@ class PositionShop extends StatelessWidget {
                   locationButtonEnable: false,
                   consumeSymbolTapEvents: false,
                   initialCameraPosition: NCameraPosition(
-                    target: NLatLng(36.8188, 127.1571), // 천안시의 위도, 경도
+                    target: NLatLng(
+                        36.8188, 127.1571
+                    ), // 천안시의 위도, 경도
                     zoom: 12,
                   ),
                 ),
@@ -96,7 +110,8 @@ class PositionShop extends StatelessWidget {
                     );
                     controller.addOverlay(marker);
                     // 마커 이름 보여주기
-                    final onMarkerInfoWindow = NInfoWindow.onMarker(id: marker.info.id, text: shopName);
+                    final onMarkerInfoWindow = NInfoWindow.onMarker(
+                        id: marker.info.id, text: shopName);
                     marker.openInfoWindow(onMarkerInfoWindow);
 
                     marker.setOnTapListener((NMarker marker) async {

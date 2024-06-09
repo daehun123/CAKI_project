@@ -11,10 +11,10 @@ import 'MP_WeeklyAddBT.dart';
 
 //이미지 리스트
 final List<String> imgList = [
-  'assets/Img/Date.jpeg',
+  'assets/Img/Date.png',
   'assets/Img/Like.png',
   'assets/Img/Weather.png',
-  'assets/Img/Ingredient.jpeg',
+  'assets/Img/Ingredient.png',
 ];
 
 final List<Widget> imageSliders = imgList
