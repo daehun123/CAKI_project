@@ -23,7 +23,6 @@ class _keyword_reveiwState extends State<keyword_reveiw> {
         'http://13.124.205.29/review/' + widget.boardid.toString() + '/';
     var dio = Dio();
     String? access_token = await storage.read(key: 'jwt_accessToken');
-    String? refresh_token = await storage.read(key: 'jwt_refreshToken');
     Map<String, dynamic> data = {'review' : list};
 
     try {
