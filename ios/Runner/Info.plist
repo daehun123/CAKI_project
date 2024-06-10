@@ -57,18 +57,52 @@
     <key>NSLocationAlwaysUsageDescription</key>
     <string>This app needs access to location when in the background.</string>
     <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLName</key>
-            <string>naver</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
+    <dict>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>CFBundleURLName</key>
                 <string>naver</string>
-            </array>
-        </dict>
-    </array>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                    <string>cakiapp</string>
+                </array>
+            </dict>
+        </array>
+        <key>LSApplicationQueriesSchemes</key>
+                <array>
+                    <string>naversearchapp</string>
+                    <string>naversearchthirdlogin</string>
+                </array>
+        <key>naverServiceAppUrlScheme</key>
+                <string>cakiapp</string>
+                <key>naverConsumerKey</key>
+                <string>IeMtmKBefztC_rW0RGjW</string>
+                <key>naverConsumerSecret</key>
+                <string>epYTcqupVJ</string>
+                <key>naverServiceAppName</key>
+                <string>cakiapp</string>
+        <key>NSAppTransportSecurity</key>
+                <dict>
+                   <key>NSAllowsArbitraryLoads</key>
+                   <true/>
+                   <key>NSExceptionDomains</key>
+                   <dict>
+                      <key>naver.com</key>
+                      <dict>
+                         <key>NSExceptionRequiresForwardSecrecy</key>
+                         <false/>
+                         <key>NSIncludesSubdomains</key>
+                         <true/>
+                      </dict>
+                      <key>naver.net</key>
+                      <dict>
+                         <key>NSExceptionRequiresForwardSecrecy</key>
+                         <false/>
+                         <key>NSIncludesSubdomains</key>
+                         <true/>
+                      </dict>
+                   </dict>
+                </dict>
     <key>naverConsumerKey</key>
     <string>V6WKyFNZ2YLfhUM1zP6O</string>
     <key>naverConsumerSecret</key>
