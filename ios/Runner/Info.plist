@@ -104,5 +104,17 @@
                   </dict>
                </dict>
             </dict>
+             <key>naverConsumerKey</key>
+                <string>V6WKyFNZ2YLfhUM1zP6O</string>
+                <key>naverConsumerSecret</key>
+                <string>OtXfpYXReo</string>
+                <key>naverServiceAppName</key>
+                <string>caki</string>
+                <key>naverServiceAppUrlScheme</key>
+                <string>naver</string>
+                <key>NSLocationWhenInUseUsageDescription</key>
+                <string>현재 위치를 사용하려면 위치 권한이 필요합니다.</string>
+                <key>NSLocationAlwaysUsageDescription</key>
+                <string>현재 위치를 사용하려면 위치 권한이 필요합니다.</string>
 </dict>
 </plist>
