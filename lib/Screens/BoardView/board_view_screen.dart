@@ -260,16 +260,16 @@ class _board_viewerState extends State<board_viewer> {
     }
   }
 
-  Future<void> _delete() async{
+  Future<void> _delete() async {
     var url =
         'http://13.124.205.29/deletepost/' + widget.boardid.toString() + '/';
     var dio = Dio();
     String? access_token = await storage.read(key: 'jwt_accessToken');
     String? refresh_token = await storage.read(key: 'jwt_refreshToken');
-    try{
+    try {
       var response = await dio.delete(url,
           options: Options(headers: {'Authorization': 'Bearer $access_token'}));
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -284,9 +284,8 @@ class _board_viewerState extends State<board_viewer> {
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                            MyHomePage()),
-                            (route) => false);
+                            builder: (BuildContext context) => MyHomePage()),
+                        (route) => false);
                   },
                 ),
               ],
@@ -294,7 +293,7 @@ class _board_viewerState extends State<board_viewer> {
           },
         );
       }
-    }catch(e){
+    } catch (e) {
       print(e);
     }
   }
@@ -315,22 +314,21 @@ class _board_viewerState extends State<board_viewer> {
               backgroundColor: kColor,
               actions: [
                 _board_data[0]['post_info']['writer']['nickname'] ==
-                    _board_data[0]['user_info']['nickname']
+                        _board_data[0]['user_info']['nickname']
                     ? PopupMenuButton<String>(
-                  onSelected: (value) {
-                  },
-                  itemBuilder: (BuildContext context) {
-                    return [
-                      PopupMenuItem<String>(
-                        value: 'option1',
-                        child: Text('삭제하기'),
-                        onTap: () {
-                          _delete();
+                        onSelected: (value) {},
+                        itemBuilder: (BuildContext context) {
+                          return [
+                            PopupMenuItem<String>(
+                              value: 'option1',
+                              child: Text('삭제하기'),
+                              onTap: () {
+                                _delete();
+                              },
+                            ),
+                          ];
                         },
-                      ),
-                    ];
-                  },
-                )
+                      )
                     : Container(),
               ],
             ),
@@ -414,7 +412,8 @@ class _board_viewerState extends State<board_viewer> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => PositionShop()),
+                              MaterialPageRoute(
+                                  builder: (context) => PositionShop()),
                             );
                           },
                         ),
@@ -484,7 +483,7 @@ class _board_viewerState extends State<board_viewer> {
                     color: kColor,
                   ),
                   Padding(
-                    padding: const EdgeInsets .all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Text(
                       '재료',
                       style: TextStyle(fontSize: 17),
@@ -600,6 +599,76 @@ class _board_viewerState extends State<board_viewer> {
                           )
                         : Container(),
                   ),
+                  if (_board_data[0]['post_info']['review'].isNotEmpty) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: kColor,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Text(
+                                  '#${_board_data[0]['post_info']['review'][0]['keyword'].toString()}',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 16.0),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: kColor,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Text(
+                                  '#${_board_data[0]['post_info']['review'][1]['keyword'].toString()}',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 16.0),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: kColor,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Text(
+                                  '#${_board_data[0]['post_info']['review'][2]['keyword'].toString()}',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                   keyword_reveiw(boardid: widget.boardid),
                 ],
               ),
