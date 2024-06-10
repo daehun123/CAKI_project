@@ -47,7 +47,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   getwidget: ^4.0.0
   flutter_naver_map: ^1.2.2
-  location: ^4.3.0
+  location: ^6.0.2
   url_launcher: ^6.2.5
 
 dev_dependencies:
