@@ -8,7 +8,6 @@
     <string>마이크 사용에 필요합니다.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>사진 라이브러리 사용에 필요합니다.</string>
-
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
@@ -57,60 +56,53 @@
     <key>NSLocationAlwaysUsageDescription</key>
     <string>This app needs access to location when in the background.</string>
     <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>naver</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>cakiapp</string>
+            </array>
+        </dict>
+    </array>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>naversearchapp</string>
+        <string>naversearchthirdlogin</string>
+    </array>
+    <key>NSAppTransportSecurity</key>
     <dict>
-                <key>CFBundleTypeRole</key>
-                <string>Editor</string>
-                <key>CFBundleURLName</key>
-                <string>naver</string>
-                <key>CFBundleURLSchemes</key>
-                <array>
-                    <string>cakiapp</string>
-                </array>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+        <key>NSExceptionDomains</key>
+        <dict>
+            <key>naver.com</key>
+            <dict>
+                <key>NSExceptionRequiresForwardSecrecy</key>
+                <false/>
+                <key>NSIncludesSubdomains</key>
+                <true/>
             </dict>
-        </array>
-        <key>LSApplicationQueriesSchemes</key>
-                <array>
-                    <string>naversearchapp</string>
-                    <string>naversearchthirdlogin</string>
-                </array>
-        <key>naverServiceAppUrlScheme</key>
-                <string>cakiapp</string>
-                <key>naverConsumerKey</key>
-                <string>IeMtmKBefztC_rW0RGjW</string>
-                <key>naverConsumerSecret</key>
-                <string>epYTcqupVJ</string>
-                <key>naverServiceAppName</key>
-                <string>cakiapp</string>
-        <key>NSAppTransportSecurity</key>
-                <dict>
-                   <key>NSAllowsArbitraryLoads</key>
-                   <true/>
-                   <key>NSExceptionDomains</key>
-                   <dict>
-                      <key>naver.com</key>
-                      <dict>
-                         <key>NSExceptionRequiresForwardSecrecy</key>
-                         <false/>
-                         <key>NSIncludesSubdomains</key>
-                         <true/>
-                      </dict>
-                      <key>naver.net</key>
-                      <dict>
-                         <key>NSExceptionRequiresForwardSecrecy</key>
-                         <false/>
-                         <key>NSIncludesSubdomains</key>
-                         <true/>
-                      </dict>
-                   </dict>
-                </dict>
+            <key>naver.net</key>
+            <dict>
+                <key>NSExceptionRequiresForwardSecrecy</key>
+                <false/>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+            </dict>
+        </dict>
+    </dict>
     <key>naverConsumerKey</key>
-    <string>V6WKyFNZ2YLfhUM1zP6O</string>
+    <string>IeMtmKBefztC_rW0RGjW</string>
     <key>naverConsumerSecret</key>
-    <string>OtXfpYXReo</string>
+    <string>epYTcqupVJ</string>
     <key>naverServiceAppName</key>
-    <string>caki</string>
+    <string>cakiapp</string>
     <key>naverServiceAppUrlScheme</key>
-    <string>naver</string>
+    <string>cakiapp</string>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>현재 위치를 사용하려면 위치 권한이 필요합니다.</string>
     <key>NSLocationAlwaysUsageDescription</key>
