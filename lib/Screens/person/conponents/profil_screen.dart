@@ -145,6 +145,25 @@ class _Profil_bodyState extends State<Profil_body> {
         await storage.delete(key: 'jwt_refreshToken');
         await storage.write(key: 'jwt_refreshToken', value: refresh_token);
         await storage.write(key: 'jwt_accessToken', value: access_token_change);
+        setState(() {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('변경 완료'),
+                content: Text('프로필 사진이 변경되었습니다.'),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('확인'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        });
       } else if (response.statusCode == 401) {
         try {
           response = await dio.get(
@@ -210,14 +229,25 @@ class _Profil_bodyState extends State<Profil_body> {
         ),
       );
       if(response.statusCode == 200){
-        print(access_token);
-        var access_token_change = response.data['access_token'];
-        print(access_token);
-        var refresh_token = response.data['refresh_token'];
-        await storage.delete(key: 'jwt_accessToken');
-        await storage.delete(key: 'jwt_refreshToken');
-        await storage.write(key: 'jwt_refreshToken', value: refresh_token);
-        await storage.write(key: 'jwt_accessToken', value: access_token_change);
+        setState(() {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('변경 완료'),
+                content: Text('프로필 사진이 변경되었습니다.'),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('확인'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        });
       }
     } catch (e) {}
   }
