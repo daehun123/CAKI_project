@@ -484,7 +484,7 @@ class _board_viewerState extends State<board_viewer> {
                     color: kColor,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets .all(8.0),
                     child: Text(
                       '재료',
                       style: TextStyle(fontSize: 17),
