@@ -16,6 +16,7 @@ class _FilterScreenState extends State<FilterScreen> {
   late GroupButtonController _tasteController;
   late GroupButtonController _otherController;
   late GroupButtonController _expertController;
+  late GroupButtonController _reivewController;
 
   List<String> expertGroup = ['인증 ◯', '인증 ☓'];
 
@@ -47,10 +48,30 @@ class _FilterScreenState extends State<FilterScreen> {
     '우유/크림',
   ];
 
+  List<String> reviewGroup = [
+    '달달해요',
+    '써요',
+    '셔요',
+    '풍미가\n좋아요',
+    '어려워요',
+    '쉬워요',
+    '싸요',
+    '비싸요',
+    '파티에\n좋아요',
+    '혼자먹기\n좋아요',
+    '둘이먹기\n좋아요',
+    '트렌디해요',
+    '추천해요',
+    '예뻐요',
+    '우디해요',
+    '깔끔해요'
+  ];
+
   List<String> choiceExpert = []; // 사용자의 선택을 저장하는 리스트
   List<String> choicealcohol = [];
   List<String> choicetaste = [];
   List<String> choiceother = [];
+  List<String> choicereivew = [];
   int selectCount = 0;
 
   @override
@@ -60,6 +81,7 @@ class _FilterScreenState extends State<FilterScreen> {
     _tasteController = GroupButtonController(selectedIndexes: []);
     _otherController = GroupButtonController(selectedIndexes: []);
     _expertController = GroupButtonController(selectedIndexes: []);
+    _reivewController = GroupButtonController(selectedIndexes: []);
   }
 
   @override
@@ -243,6 +265,47 @@ class _FilterScreenState extends State<FilterScreen> {
                           });
                         },
                       ),
+                      SizedBox(height: 15),
+                      Text(
+                        '키워드 리뷰',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      GroupButton(
+                        buttons: reviewGroup,
+                        options: GroupButtonOptions(
+                          selectedShadow: const [],
+                          unselectedShadow: const [],
+                          selectedTextStyle: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                          selectedColor: kColor,
+                          unselectedColor: Colors.grey,
+                          unselectedTextStyle: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                          spacing: 5,
+                          buttonWidth: MediaQuery.of(context).size.width / 2.4,
+                        ),
+                        isRadio: false,
+                        controller: _reivewController,
+                        // 도수 & 당도 그룹에 대한 Controller
+                        onSelected: (val, i, selected) {
+                          // 선택 상태 변경 시 동작
+                          setState(() {
+                            if (selected) {
+                              choicereivew.add(val);
+                              selectCount++;
+                            } else {
+                              choicereivew.remove(val);
+                              selectCount--;
+                            }
+                          });
+                        },
+                      ),
                     ],
                   ),
                 ],
@@ -269,6 +332,7 @@ class _FilterScreenState extends State<FilterScreen> {
               selectedKeywords.addAll(choicealcohol);
               selectedKeywords.addAll(choicetaste);
               selectedKeywords.addAll(choiceother);
+              selectedKeywords.addAll(choicereivew);
 
               // 선택된 항목들을 출력하여 확인
               debugPrint('Selected Keywords: $selectedKeywords');

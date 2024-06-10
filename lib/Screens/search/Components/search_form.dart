@@ -1,8 +1,7 @@
-import 'package:caki_project/Screens/search/Search_Resultscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../Search_Resultscreen.dart';
 
 class SearchForm extends StatefulWidget {
   SearchForm({Key? key}) : super(key: key);
@@ -12,7 +11,6 @@ class SearchForm extends StatefulWidget {
 
 class _SearchFormState extends State<SearchForm> {
   String? selectedItem;
-
   TextEditingController _searchController = TextEditingController();
 
   @override
@@ -34,14 +32,14 @@ class _SearchFormState extends State<SearchForm> {
         ),
         IconButton(
           icon: Icon(Icons.search),
-          onPressed: () {
+          onPressed: () async {
             if (selectedItem == null || selectedItem!.isEmpty) {
               // 검색어가 비어 있을 때 사용자에게 알림 표시
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
                   title: Text('주의', style: TextStyle(color: Colors.red)),
-                  content: Text('검색어를 입력하세요.',style: TextStyle(color: Colors.red)),
+                  content: Text('검색어를 입력하세요.', style: TextStyle(color: Colors.red)),
                   actions: <Widget>[
                     TextButton(
                       onPressed: () {
@@ -53,6 +51,9 @@ class _SearchFormState extends State<SearchForm> {
                 ),
               );
             } else {
+              // 검색어 저장
+              await _saveSearchTerm(selectedItem!);
+
               // 검색어가 있는 경우에만 결과 화면으로 이동
               Navigator.push(
                 context,
@@ -65,5 +66,17 @@ class _SearchFormState extends State<SearchForm> {
         ),
       ],
     );
+  }
+
+  Future<void> _saveSearchTerm(String term) async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> searchHistory = prefs.getStringList('searchHistory') ?? [];
+    if (!searchHistory.contains(term)) {
+      searchHistory.insert(0, term);
+      if (searchHistory.length > 10) {
+        searchHistory.removeLast();
+      }
+      await prefs.setStringList('searchHistory', searchHistory);
+    }
   }
 }
